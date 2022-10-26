@@ -1,0 +1,63 @@
+.head-button{
+    border: none;
+    background-color: inherit;
+    cursor: pointer;
+    color: rgb(251, 255, 255);
+    margin-left: 0.5rem;
+}
+
+.head-button, .head-item{
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#head{
+    background: linear-gradient(0deg, rgb(25 36 54), rgb(25 37 55) 50%, rgb(25 36 55) );
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+    height: 1.8rem;
+}
+
+#logo{
+    background-image: url("../../resources/reddit-logo.svg");
+    width: 5rem;
+    height: auto;
+    background-size: cover;
+}
+
+#use-app-button{
+    height: 1.5rem;
+    margin-left: auto;
+    background-color: rgb(255, 102, 0);
+    padding: 0 0.6rem 0 0.6rem;
+    border-radius: 100px;
+}
+
+#new-post-button{
+
+    background-image: url("../../resources/plus.svg");
+
+    width: 1.3rem;
+    height: auto;
+}
+
+#sidebar-button{
+    /*The svg's color is F2F0FF*/
+    background-image: url("../../resources/menu-burger.svg");
+    
+
+    width: 1.3rem;
+    height: auto;
+    margin-right: 0.25rem;
+}
+
+/*
+
+.Head-item{
+    flex: 1;
+    border: 0.1rem red solid;
+}
+
+*/

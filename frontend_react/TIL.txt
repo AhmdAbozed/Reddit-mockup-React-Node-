@@ -1,0 +1,5 @@
+when you setstate,
+the new state is only available next render, current render's state is the same,
+to use the new state at the same render,
+use it inside useeffect, that has the state as a dependency
+because useeffect forces a re-render i guess
