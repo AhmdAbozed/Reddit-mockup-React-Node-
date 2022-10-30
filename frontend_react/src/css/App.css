@@ -1,7 +1,7 @@
 
 
 @media (min-width: 821px){
-    .post-item-list{
+    .post-item-list, .subreddits-list{
         margin: auto;
         width: 800px;
     }
