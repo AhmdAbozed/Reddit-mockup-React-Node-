@@ -5,16 +5,13 @@ import "./../css/Font.css"
 import "./../css/Post_Item.css"
 
 const Subreddit_Item = (props:{key: string,ID: string, Title: string, Members: string}) => {
-    
-    const [voteState, setVote] = useState("neutral");
-    const [voteCount, setCount] = useState(()=>{return 99})
 
-    useEffect(()=>{(document.getElementById(props.ID+"votecount") as HTMLDivElement).innerHTML = JSON.stringify(voteCount);}, [voteCount])
+    //href={"/subreddit/"+props.ID}
 
-    
-    return (
-        <div className= "post-item">
-            <div  className="inline post-item-sub-icon" />
+    return (        
+        <div className= "post-item" onClick={(e)=>{if(window.getSelection()?.toString().length === 0)window.location.href = "/subreddit/"+props.ID}}>
+            {/*using anchors prevents text selection*/}
+            <div className="inline post-item-sub-icon" />
             <div className="post-item-subreddit">r/subreddit</div>
             <div className="post-item-title">r/SUBREDDIT</div>
             <img src="" alt="" className="post-item-img" />

@@ -6,8 +6,14 @@
     display: inline-block;
 }
 
+.anchor{
+    display: block;
+    height: 100%;
+}
 
 .post-item {
+    cursor: pointer;
+    position: relative;
     border-top: 2px black solid;
     border-bottom: 2px black solid;
     ;

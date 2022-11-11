@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
-import "./../css/CreatePost.css"
+import React, { useState, useEffect,  } from "react";
+import { useParams } from "react-router-dom";
+import "./../css/CreatePost.css";
 const CreatePost = () => {
     
+    let { id } = useParams();  
     const [buttonState, setButtonState] = useState([0,0]);
+    const [subredditState, setSubredditState] = useState(-1)
 
     useEffect(()=>{
         const buttonElement = document.getElementById("create-post-submit");
@@ -31,7 +34,7 @@ const CreatePost = () => {
             body: JSON.stringify(submission)
         }
 
-        const resp = await fetch("http://" + window.location.hostname + ":" + 3003 + "/posts", options);
+        const resp = await fetch("http://" + window.location.hostname + ":3003/subreddits/"+id+"/posts", options);
         if(resp.status == 200){
             console.log("Mission success. 200")
         }
@@ -41,6 +44,9 @@ const CreatePost = () => {
         
     }
 
+    
+    console.log("postlist ID " + id)
+  
     return (
         <form id="create-post" action="" method="post" onSubmit={submitPost}>
             <div className="create-post-item" id="create-post-head">

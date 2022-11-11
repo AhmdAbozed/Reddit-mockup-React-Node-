@@ -5,23 +5,30 @@ import App from './App';
 import CreatePost from './components/CreatePost';
 import reportWebVitals from './reportWebVitals';
 import {  createBrowserRouter, RouterProvider, Route  } from "react-router-dom";
+import PostsList from './components/PostsList';
+import SubredditsList from './components/SubredditsList';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App/>
-  },
+    element: <App/>,
+    children:[
+      {
+        path: "/",
+        element: <SubredditsList/>
+      },
+      {
+        path: "/subreddit/:id",
+        element: <PostsList/>
+      }
+    ]
+  },  
   {
-    path: "/test",
+    path: "/subreddit/:id/createPost",
     element: <CreatePost/>
-  }
+  },
+  
 ]);
-
-const DATA = [
-  { id: "todo-0", name: "Eat", completed: true },
-  { id: "todo-1", name: "Sleep", completed: false },
-  { id: "todo-2", name: "Repeat", completed: false }
-];
 
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);

@@ -4,9 +4,10 @@ import Sidebar from "./components/sidebar";
 import PostsList from "./components/PostsList";
 import SubredditsList from "./components/SubredditsList";
 import "./css/App.css"
+import { Outlet } from "react-router-dom";
 const App =  () => {
   const [sidebarState, toggleSidebar] = useState(false);
-
+  const [subredditState, setSubredditState] = useState(-1)
   const renderSidebar = () => {
     if (sidebarState) {
       return <Sidebar />;
@@ -16,21 +17,16 @@ const App =  () => {
  
 
   return (
-    <body>
+    <div>
 
-      <Head toggleSidebar={toggleSidebar} sidebarState={sidebarState} />
+      <Head toggleSidebar={toggleSidebar} sidebarState={sidebarState} subredditId={subredditState} />
       {renderSidebar()}
 
-      <div className="post-item-list">
-
-        <PostsList/>
+      <div className="posts-list">
+        <Outlet context={[subredditState, setSubredditState]}/>
       </div>
 
-      <div className="subreddits-list">
-        <SubredditsList/>
-      </div>
-
-    </body>
+    </div>
   )
 }
 

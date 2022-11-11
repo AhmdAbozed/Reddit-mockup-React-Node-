@@ -27,7 +27,7 @@ app.use(cors({
       'Access-Control-Allow-Methods'
     ],
     "methods": 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-    "preflightContinue": true,
+    "preflightContinue": false,
     "origin": 'http://localhost:3000',
 }));
 
