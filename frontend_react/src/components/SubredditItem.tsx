@@ -1,5 +1,3 @@
-import { count } from "console";
-import e from "express";
 import React, { useEffect, useState } from "react";
 import "./../css/Font.css"
 import "./../css/Post_Item.css"
