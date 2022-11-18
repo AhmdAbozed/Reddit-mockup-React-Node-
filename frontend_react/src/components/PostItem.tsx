@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import "./../css/Font.css"
 import "./../css/Post_Item.css"
 
-const Post_Item = (props:{key: string,ID: string, Title: string, Text: string}) => {
+const Post_Item = (props:{key: string,ID: string, Title: string, Text: string, Votes: number}) => {
     
     const [voteState, setVote] = useState("neutral");
-    const [voteCount, setCount] = useState(()=>{return 99})
+    const [voteCount, setCount] = useState(()=>{return props.Votes})
     const [render, setrender] = useState(1);
 
     useEffect(()=>{(document.getElementById(props.ID+"votecount") as HTMLDivElement).innerHTML = JSON.stringify(voteCount);}, [voteCount])
@@ -37,11 +37,11 @@ const Post_Item = (props:{key: string,ID: string, Title: string, Text: string}) 
         <div className= "post-item">
             <div  className="inline post-item-sub-icon" />
             <div className="post-item-subreddit">r/subreddit</div>
-            <div className="post-item-title">INSERT TITLE HERE</div>
+            <div className="post-item-title">{props.Title}</div>
             <img src="" alt="" className="post-item-img" />
             <div className="post-item-details">
                 <input type={"button"} className="inline small-icon upvote hollow" id={props.ID + "upvote"} onClick={voteChange}/>
-                <div className="inline vote-count" id={props.ID + "votecount"}>99</div>
+                <div className="inline vote-count" id={props.ID + "votecount"}></div>
                 <div className="inline small-icon downvote hollow" id={props.ID + "downvote"} onClick={voteChange}></div>
                 <div className="inline awards-icon">|+|</div>
             </div>

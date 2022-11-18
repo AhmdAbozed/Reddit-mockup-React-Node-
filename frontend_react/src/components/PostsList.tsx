@@ -47,7 +47,7 @@ const PostsList = () => {
 
       const posts = await getPosts();
       console.log("RETURNING POST ELEMENTS")
-      const postElements = posts.map((post: post) => (<PostItem key={JSON.stringify(post.id)} ID={JSON.stringify(post.id)} Title={post.title} Text={post.text} />))
+      const postElements = posts.map((post: post) => (<PostItem key={JSON.stringify(post.id)} ID={JSON.stringify(post.id)} Title={post.title} Text={post.text} Votes={Number(post.votes)}/>))
       setPostElements(postElements)
       console.log("logging postelements" + postElements)
     }
