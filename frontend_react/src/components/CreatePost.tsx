@@ -4,7 +4,7 @@ import "../css/CreatePost.css";
 const CreatePost = () => {
     
     let { id } = useParams();
-    console.log("the id inside creatPost is: " + id)  
+    
     const [buttonState, setButtonState] = useState([0,0]);
 
     useEffect(()=>{
@@ -21,11 +21,11 @@ const CreatePost = () => {
     },[buttonState])
 
     const submitPost = async (event: React.FormEvent<HTMLFormElement>)=>{
+        console.log("the id inside creatPost is: " + id)  
         console.log("createpost url is: " + window.location.href)
         event.preventDefault();
         const target = event.target as any
-        console.log("LOGGING TARGET!!!"+target.elements.desc.value)
-        const submission = {Title: target.title.value, Text: target.elements.desc.value}
+        const submission = {Title: target.elements.title.value, Text: target.elements.desc.value}
         
         const options = {
             method: "POST",
@@ -39,6 +39,7 @@ const CreatePost = () => {
         console.log("THE RESPONSE " + JSON.stringify(resp))
         if(resp.status == 200){
             console.log("Mission success. 200")
+            document.getElementById("result")!.innerHTML = "200. Response recieved"
         }
         return resp;
     }
@@ -58,7 +59,7 @@ const CreatePost = () => {
                  name="desc" form="create-post" 
                  id="create-post-desc-input"
                  placeholder="Add your text..."
-                 value="hmmsss" 
+                 
                  onChange={(e)=>{
                     if(e.target.value !="")setButtonState([buttonState[0], 1])
                     else setButtonState([buttonState[0], 0]);
@@ -78,7 +79,7 @@ const CreatePost = () => {
 
                 
             </div>
-            <div data-testid="testElement" onClick={(e)=>{const target = e.target as any; target.innerHTML = "hii"}}>hoo</div>
+            <div data-testid="testElement" id="result">hoo</div>
         </form>
     )
 }

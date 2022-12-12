@@ -23,13 +23,14 @@ const getPosts = async function (req: Request, res: Response) {
 
 const postPosts = async function (req: Request, res: Response) {
     try{
-        console.log("the body " + req.body.Text);
+        console.log("the Desc " + req.body.Text);
+        console.log("the Title " + req.body.Title);
         
         psuedoPost.text = req.body.Text;
         psuedoPost.title = req.body.Title;        
         psuedoPost.subreddit_id = req.params.id;
         const result = await store.create(psuedoPost);
-        console.log("posting post result: " + result)
+        console.log("posting post result: " + JSON.stringify(result))
         if(result)res.sendStatus(200);
     }
     catch(err) {
