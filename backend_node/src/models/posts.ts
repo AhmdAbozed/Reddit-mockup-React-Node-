@@ -29,7 +29,7 @@ export class postsStore {
 
     async create(post: post): Promise<post> {
         try {
-
+            
             const conn = await client.connect();
             const sql = 'INSERT INTO posts (op, title, text, img, votes, subreddit_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
             const results = await conn.query(sql, [post.op, post.title, post.text, post.img, post.votes, post.subreddit_id]);

@@ -5,6 +5,7 @@ import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import PostsRouter from './controllers/posts.js'
 import SubredditsRouter from './controllers/subreddits.js'
+import usersRouter from './controllers/users.js'
 dotenv.config()
 
 const port = process.env.backendPort 
@@ -39,5 +40,6 @@ app.listen(port, function () {
 
 app.use('/', PostsRouter)
 app.use('/', SubredditsRouter)
+app.use('/', usersRouter)
 
 export {app}

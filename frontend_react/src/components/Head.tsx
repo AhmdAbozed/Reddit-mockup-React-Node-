@@ -25,7 +25,7 @@ const Head = (props: {
                 <div className="head-item" id="logo"><a href="/" className="anchor"><span/></a></div>
                 <div className="head-item dropdown" id="communities-dropdown" hidden>-communities dropdown-</div>
                 <input type="button" className="head-item head-button" id="use-app-button" value={"Use App"} />
-                <input type="button" className="head-item head-button" id="signin-button" value={"Log In"} onClick={
+                <input type="button" className="head-item head-button" id="signin-button" aria-label="sign in" value={"Log In"} onClick={
                     () => {
                         console.log("clicked: " + props.toggleLoginForm); props.toggleLoginForm(true)
                     }

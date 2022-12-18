@@ -3,12 +3,13 @@
   "scripts": {
     "build": "tsc",
     "start": " npx ts-node src/server.ts",
+    "startTestEnv":"cross-env ENV=test npm run start",
     "DB": "db-migrate --env placeholder db:create store_front_db",
     "testDB": "db-migrate --env placeholder db:create store_test_db",
     "migrateUp": "db-migrate --env dev up",
     "migrateDown": "db-migrate --env dev down",
-    "migrateUpTest": "cross-env ENV=test db-migrate --env test up",
-    "migrateDownTest": "cross-env ENV=test db-migrate --env test down",
+    "migrateUpTest": "cross-env ENV=test db-migrate up",
+    "migrateDownTest": "cross-env ENV=test db-migrate down",
     "test": "tsc && jasmine",
     "migrateTest": "npm run build && npm run migrateUpTest && (npm run test || npm run migrateDownTest) && npm run migrateDownTest"
   },
@@ -28,6 +29,7 @@
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/pg": "^8.6.5",
+    "express-validator": "^6.14.2",
     "ts-node": "^10.9.1"
   }
 }

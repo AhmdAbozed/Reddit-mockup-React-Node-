@@ -36,9 +36,9 @@ const CreatePost = () => {
         }
 
         const resp = await fetch("http://" + window.location.hostname + ":3003/subreddits/"+id+"/posts", options);
-        console.log("THE RESPONSE " + JSON.stringify(resp))
+        console.log("POST CREATION RESPONSE " + JSON.stringify(resp))
         if(resp.status == 200){
-            console.log("Mission success. 200")
+            console.log("Created post successfully. 200")
             document.getElementById("result")!.innerHTML = "200. Response recieved"
         }
         return resp;

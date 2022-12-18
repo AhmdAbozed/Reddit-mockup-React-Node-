@@ -23,8 +23,8 @@ const getPosts = async function (req: Request, res: Response) {
 
 const postPosts = async function (req: Request, res: Response) {
     try{
-        console.log("the Desc " + req.body.Text);
-        console.log("the Title " + req.body.Title);
+        console.log("post controller: the Desc " + req.body.Text);
+        console.log("post controller: the Title " + req.body.Title);
         
         psuedoPost.text = req.body.Text;
         psuedoPost.title = req.body.Title;        
@@ -32,6 +32,7 @@ const postPosts = async function (req: Request, res: Response) {
         const result = await store.create(psuedoPost);
         console.log("posting post result: " + JSON.stringify(result))
         if(result)res.sendStatus(200);
+        else res.sendStatus(403)
     }
     catch(err) {
             console.log("Error parsing the files: " + err);

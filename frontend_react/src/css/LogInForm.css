@@ -27,7 +27,7 @@
     animation-fill-mode: forwards;
 }
 
-#signin-form{
+.user-form{
 position: relative;
 z-index: 1;
 display: flex;
@@ -58,6 +58,7 @@ animation-duration: 0.5s;
     top: 1rem;
     right: 1rem;
     border: none;
+    cursor: pointer;
 }
 
 #signin-info{
@@ -131,7 +132,7 @@ animation-duration: 0.5s;
 
 #signin-submit{
     font-size: medium;
-    margin-top: 2.5em;
+
     width: 15rem;
     border-radius: 1.5rem;
     height: 2.5rem;
@@ -143,4 +144,17 @@ animation-duration: 0.5s;
 
 #signup-prompt{
     margin-top: 1.3rem;
+}
+
+#invalid-prompts-container{
+    margin-bottom: 1rem;
+}
+
+.invalid-input{
+    border: 1.2px solid red;
+}
+
+.invalid-prompt{
+    color: red;
+
 }
