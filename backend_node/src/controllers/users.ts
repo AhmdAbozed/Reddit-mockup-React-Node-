@@ -1,13 +1,10 @@
 import { body, validationResult } from 'express-validator';
-import express, { Router } from "express"
-import e, { Request, Response } from 'express'
+import  { Router } from "express"
+import  { Request, Response } from 'express'
 import { usersStore, user } from '../models/users.js';
-import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv'
 //import {verifyAuthToken, redirectToHome, createToken} from "../util/tokenauth.js"
-import bodyParser from "body-parser";
-import path from "path"
-
+import { tokenClass } from '../util/tokenauth.js';
 dotenv.config()
 
 const { tokenSecret, adminTokenSecret, adminUsername, adminPassword, HOST_PORT_URL} = process.env
@@ -15,7 +12,7 @@ const { tokenSecret, adminTokenSecret, adminUsername, adminPassword, HOST_PORT_U
 //const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 const store = new usersStore();
-
+const token = new tokenClass();
 //See express-validator docs for, docs.
 const signUpPost = [
 
@@ -27,7 +24,7 @@ const signUpPost = [
     body('Password').matches(/^\w{4,20}$/).withMessage("Password must be 4-20 characters"),
 
     async function (req: Request, res: Response) {
-
+        
         const errorArr = validationResult(req).array()
 
         if (errorArr[0]) {
@@ -43,8 +40,9 @@ const signUpPost = [
         }
 
         const submission: user = {username: req.body.Username, password: req.body.Password, email: req.body.Email  }
-        console.log("submission thing: " + JSON.stringify(submission))
+        console.log("submission thing [signup]: " + JSON.stringify(submission))
         const validation = await store.validateSignUp(submission)
+        
         if (validation[0]){
             //username/email already exist
             console.log("recieved validation: "+JSON.stringify(validation[0]))
@@ -54,14 +52,12 @@ const signUpPost = [
             }
             res.status(403).send(JSON.stringify(errorPrompt));
             console.log("ErrorPrompt signup: " + JSON.stringify(errorPrompt))
-            return;
-          
+            return;  
         }
+
         const result = await store.signup(submission)
 
-        //createToken(res, result)
-        
-        res.status(200).send(errorArr)
+        await token.createRefreshToken(req,res,result.id!)
 
         console.log("result/End Of Sign Up Function: "+result)
     }]
@@ -75,7 +71,7 @@ const signUpPost = [
     
         async function (req: Request, res: Response) {
     
-            const errorArr = validationResult(req).array()
+        try{    const errorArr = validationResult(req).array()
     
             if (errorArr[0]) {
               //An error is found
@@ -96,14 +92,20 @@ const signUpPost = [
     
             //createToken(res, result)
             if(result[0]){
-                res.status(200).send(result)
+                token.createRefreshToken(req,res,result[0].id!)
             }
             else{
-                res.status(403).send("Incorrect username or password")
+                res.status(403).send(JSON.stringify("Incorrect username or password"))
             }
             
             console.log("result/End Of Sign In Function: "+result)
-        }]
+        
+        }
+    
+        catch(error){
+            res.status(500).send(JSON.stringify("Internal server error: "+ error))
+        }
+    }]
     
 
     const UsersRouter = Router()

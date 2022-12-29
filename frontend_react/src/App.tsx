@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Head from "./components/Head";
 import Sidebar from "./components/sidebar";
-import PostsList from "./components/PostsList";
-import SubredditsList from "./components/SubredditsList";
 import "./css/App.css"
 import { Outlet } from "react-router-dom";
 import LogInForm from "./components/LogInForm";
-const App =  () => {
+const App =  ({loginOn = false} ) => {
   const [sidebarState, toggleSidebar] = useState(false);
-  const [loginFormState, toggleLoginForm] = useState(false);
+  const [loginFormState, toggleLoginForm] = useState(loginOn);
   const [subredditState, setSubredditState] = useState(-1)
   const renderSidebar = () => {
     if (sidebarState) {

@@ -3,9 +3,11 @@
   "scripts": {
     "build": "tsc",
     "start": " npx ts-node src/server.ts",
-    "startTestEnv":"cross-env ENV=test npm run start",
+    "startTestEnv": "cross-env ENV=test npm run start",
     "DB": "db-migrate --env placeholder db:create store_front_db",
-    "testDB": "db-migrate --env placeholder db:create store_test_db",
+    "testDB": "db-migrate db:create reddit_test_db",
+    "dropTestDB": "db-migrate db:drop reddit_test_db",
+ 
     "migrateUp": "db-migrate --env dev up",
     "migrateDown": "db-migrate --env dev down",
     "migrateUpTest": "cross-env ENV=test db-migrate up",

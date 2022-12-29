@@ -1,7 +1,11 @@
 import { url } from "inspector";
 import {useParams} from "react-router-dom"
-import React, { useState } from "react";
+import React, { useState } from "react"
+import cookieUtils from "../util/AccessControl";
 import "./../css/Head.css"
+
+ const cookieFuncs = new cookieUtils();
+
 const Head = (props: { 
     toggleSidebar: React.Dispatch<React.SetStateAction<boolean>>;
     toggleLoginForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,14 +13,29 @@ const Head = (props: {
     subredditId: number;
      }) => {
     let { id } = useParams();  
-    const renderHead = () => {
+    const renderPostCreation = () => {
         if (Number(id)) {
+        console.log()
+            if(true){
             return <a href={"/subreddit/"+id+"/createPost"} className="head-item head-button" id="new-post-button" />;
+            }
         }
         else {
             return;
         }
 
+    }
+
+    const renderLoginButton = ()=>{
+        if(!(cookieFuncs.hasRefreshToken())){
+            console.log("Yup, Has the stuff")
+            return   <input type="button" className="head-item head-button" id="signin-button" aria-label="sign in" value={"Log In"} onClick={
+            () => {
+                props.toggleLoginForm(true)
+            }
+        }/>
+    }
+      
     }
 
     return (
@@ -25,12 +44,8 @@ const Head = (props: {
                 <div className="head-item" id="logo"><a href="/" className="anchor"><span/></a></div>
                 <div className="head-item dropdown" id="communities-dropdown" hidden>-communities dropdown-</div>
                 <input type="button" className="head-item head-button" id="use-app-button" value={"Use App"} />
-                <input type="button" className="head-item head-button" id="signin-button" aria-label="sign in" value={"Log In"} onClick={
-                    () => {
-                        console.log("clicked: " + props.toggleLoginForm); props.toggleLoginForm(true)
-                    }
-                }/>
-                {renderHead()}
+                {renderLoginButton()}
+                {renderPostCreation()}
                 <input type="button" className="head-item head-button" id="sidebar-button" onClick={
                     () => {
                         console.log("clicked: " + props.toggleSidebar); props.toggleSidebar(!props.sidebarState)

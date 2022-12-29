@@ -2,14 +2,20 @@ import { Request, Response } from 'express'
 import { postsStore, post } from '../models/posts.js';
 import dotenv from 'dotenv'
 import Router from 'express'
+import { tokenClass } from '../util/tokenauth.js';
 
-const PostsRouter = Router(); 
+
 
 dotenv.config()
 
-let psuedoPost: post = {op: "NULL", title: "NULL", text: "NULL", img: "NULL", votes: 0, subreddit_id: "0"}
 
 const { adminTokenSecret, blazeKeyId, blazeKey, HOST_PORT_URL } = process.env
+
+const PostsRouter = Router(); 
+
+const tokenFuncs = new tokenClass()
+
+let psuedoPost: post = {op: "NULL", title: "NULL", text: "NULL", img: "NULL", votes: 0, subreddit_id: "0"}
 
 const store = new postsStore();
 
@@ -26,6 +32,7 @@ const postPosts = async function (req: Request, res: Response) {
         console.log("post controller: the Desc " + req.body.Text);
         console.log("post controller: the Title " + req.body.Title);
         
+        
         psuedoPost.text = req.body.Text;
         psuedoPost.title = req.body.Title;        
         psuedoPost.subreddit_id = req.params.id;
@@ -41,6 +48,7 @@ const postPosts = async function (req: Request, res: Response) {
     }
 
 PostsRouter.get("/subreddits/:id/posts", getPosts);
-PostsRouter.post("/subreddits/:id/posts", postPosts)
+//.bind() binds 'this' inside verifyAT to tokenFuncs object
+PostsRouter.post("/subreddits/:id/posts",tokenFuncs.verifyAccessToken.bind(tokenFuncs), postPosts)
 
 export default PostsRouter; 

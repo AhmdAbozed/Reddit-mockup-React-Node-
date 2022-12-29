@@ -27,18 +27,23 @@ const SignInForm = (props: {
             const options = {
                 method: "POST",
                 headers:{
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Credentials': 'true'
                 },
+                credentials:"include",
+                
                 body: JSON.stringify(submission)
             }
-            
+            //@ts-ignore
             const res = await fetch("http://" + window.location.hostname + ":3003/"+endpoint, options);
             console.log(res.status)
+
             const resJSON = await res.json()
-            console.log("resJSON" + JSON.stringify(resJSON))
+            console.log("resJSON" + resJSON)
+            
             if(res.status == 200 ){
-                console.log("Mission success. 200")
                 document.getElementById("result")!.innerHTML = "200. Response recieved"
+                props.toggleLoginForm(false)
             }
             else{
                 document.getElementById("result")!.innerHTML = resJSON    

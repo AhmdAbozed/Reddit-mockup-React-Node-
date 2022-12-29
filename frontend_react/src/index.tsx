@@ -4,29 +4,37 @@ import './index.css';
 import App from './App';
 import CreatePost from './components/CreatePost';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider, Route, createRoutesFromElements, Routes } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PostsList from './components/PostsList';
 import SubredditsList from './components/SubredditsList';
-
+import {AccessControl} from './util/AccessControl';
+import cookieUtils from './util/AccessControl';
+const cookieFuncs = new cookieUtils();
 //See below for a different routing method with same results
+const appChildren: Array<object> = [
+  {
+    path: "",
+    element: <SubredditsList/>
+  },
+  {
+    path: "subreddit/:id",
+    element: <PostsList/>
+  }
+] 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App/>,
-    children:[
-      {
-        path: "/",
-        element: <SubredditsList/>
-      },
-      {
-        path: "/subreddit/:id",
-        element: <PostsList/>
-      }
-    ]
+    element: <App loginOn={false}/>,
+    children:appChildren
+  },
+  {
+    path: "/login",
+    element: <App loginOn={true}/>,
+    children:appChildren
   },  
   {
     path: "/subreddit/:id/createPost",
-    element: <CreatePost/>
+    element: <AccessControl child = {<CreatePost/>}/>
   },
   
 ]);
