@@ -9,12 +9,13 @@ const PostsList = () => {
   
   type post = {
 
-    id?: Number;
-    op: string;
+    id?: number;
+    op_id: number;
+    op:string;
     title: string;
     text: string;
     img: string;
-    votes: Number;
+    votes: number;
 
   }
 
@@ -47,7 +48,7 @@ const PostsList = () => {
 
       const posts = await getPosts();
       console.log("RETURNING POST ELEMENTS")
-      const postElements = posts.map((post: post) => (<PostItem key={JSON.stringify(post.id)} ID={JSON.stringify(post.id)} Title={post.title} Text={post.text} Votes={Number(post.votes)}/>))
+      const postElements = posts.map((post: post) => (<PostItem key={JSON.stringify(post.id)} Id={JSON.stringify(post.id)} Op_id={post.op_id} Op={post.op} Title={post.title} Text={post.text} Votes={Number(post.votes)}/>))
       setPostElements(postElements)
       console.log("logging postelements" + postElements)
     }

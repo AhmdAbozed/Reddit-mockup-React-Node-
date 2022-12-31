@@ -38,13 +38,12 @@ const CreatePost = () => {
         }
         //@ts-ignore
         const resp = await fetch("http://" + window.location.hostname + ":3003/subreddits/"+id+"/posts", options);
-        const resJSON = await resp.json()
-        console.log("POST CREATION RESPONSE " + resJSON)
+        console.log("about to resp.json")
         if(resp.status == 200){
             console.log("Created post successfully. 200")
             document.getElementById("result")!.innerHTML = "200. Response recieved"
         }
-        else if(resp.status == 401){
+        else if(resp.status == 404 || resp.status == 401){
             window.location.href = "/login"
         }
         return resp;

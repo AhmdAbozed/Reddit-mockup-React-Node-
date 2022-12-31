@@ -4,7 +4,7 @@ import client from '../database.js'
 
 export type post = {
     id?: Number;
-    op:string;
+    op_id:Number;
     title: string;
     text: string;
     img: string;
@@ -32,7 +32,7 @@ export class postsStore {
             
             const conn = await client.connect();
             const sql = 'INSERT INTO posts (op, title, text, img, votes, subreddit_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
-            const results = await conn.query(sql, [post.op, post.title, post.text, post.img, post.votes, post.subreddit_id]);
+            const results = await conn.query(sql, [post.op_id, post.title, post.text, post.img, post.votes, post.subreddit_id]);
             conn.release();
             //@ts-ignore
             return results.rows[0];

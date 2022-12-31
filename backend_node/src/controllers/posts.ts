@@ -15,7 +15,7 @@ const PostsRouter = Router();
 
 const tokenFuncs = new tokenClass()
 
-let psuedoPost: post = {op: "NULL", title: "NULL", text: "NULL", img: "NULL", votes: 0, subreddit_id: "0"}
+let psuedoPost: post = {op_id: -1, title: "NULL", text: "NULL", img: "NULL", votes: 0, subreddit_id: "0"}
 
 const store = new postsStore();
 
@@ -31,11 +31,12 @@ const postPosts = async function (req: Request, res: Response) {
     try{
         console.log("post controller: the Desc " + req.body.Text);
         console.log("post controller: the Title " + req.body.Title);
-        
-        
+        const payload = JSON.parse(Buffer.from(req.cookies.refreshToken.split('.')[1],'base64').toString() )
+        console.log("payload"+payload)
         psuedoPost.text = req.body.Text;
         psuedoPost.title = req.body.Title;        
         psuedoPost.subreddit_id = req.params.id;
+        psuedoPost.op_id = Number(payload.user_id)
         const result = await store.create(psuedoPost);
         console.log("posting post result: " + JSON.stringify(result))
         if(result)res.sendStatus(200);

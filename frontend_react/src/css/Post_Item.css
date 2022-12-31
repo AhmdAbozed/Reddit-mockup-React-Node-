@@ -42,6 +42,14 @@
     margin-left: 0.15rem;
 }
 
+
+.post-item-op {
+    font-size: smaller;
+    display: inline-block;
+    margin-left: 0.5rem;
+    color: rgb(61, 61, 61);
+}
+
 .post-item-title {
     font-size: small;
     font-weight: bold;

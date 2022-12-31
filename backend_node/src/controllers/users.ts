@@ -57,7 +57,7 @@ const signUpPost = [
 
         const result = await store.signup(submission)
 
-        await token.createRefreshToken(req,res,result.id!)
+        await token.createRefreshToken(req,res,result)
 
         console.log("result/End Of Sign Up Function: "+result)
     }]
@@ -92,7 +92,7 @@ const signUpPost = [
     
             //createToken(res, result)
             if(result[0]){
-                token.createRefreshToken(req,res,result[0].id!)
+                token.createRefreshToken(req,res,result[0])
             }
             else{
                 res.status(403).send(JSON.stringify("Incorrect username or password"))

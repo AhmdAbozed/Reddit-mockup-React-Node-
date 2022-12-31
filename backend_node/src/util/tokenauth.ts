@@ -8,6 +8,7 @@ import dotenv from 'dotenv'
 import jwt, { Secret } from 'jsonwebtoken'
 import path from "path"
 import client from '../database.js'
+import { user } from '../models/users.js'
 
 
 dotenv.config()
@@ -44,7 +45,7 @@ class tokenClass {
       res.status(403).send(JSON.stringify("Error creating access token: .") + error)
     }
   }
-  async createRefreshToken(req: Request, res: Response, user_id: number, permission?: string): Promise<any> {
+  async createRefreshToken(req: Request, res: Response, user: user, permission?: string): Promise<any> {
     try {
       console.log("inside createrefresh")
       const options = {
@@ -53,10 +54,10 @@ class tokenClass {
         httpOnly: true, //To prevent client-side access to cookies
       }
 
-      const token = jwt.sign({ user_id: user_id }, tokenSecret as string)
+      const token = jwt.sign({ user: user.username, user_id: user.id }, tokenSecret as string)
       const conn = await client.connect();
       const sql = 'INSERT INTO refreshtokens (user_id, token) VALUES ($1, $2) RETURNING *';
-      const results = await conn.query(sql, [user_id, token]);
+      const results = await conn.query(sql, [user.id, token]);
       conn.release();
 
       console.log("about to send cookies [refresh]")
