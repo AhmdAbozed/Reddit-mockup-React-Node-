@@ -47,7 +47,6 @@ const SubredditsList = () => {
       if(subreddits){
         const subredditElements = subreddits.map((subreddit: subreddit) => (<SubredditItem key={JSON.stringify(subreddit.id)} ID={JSON.stringify(subreddit.id)} Title={subreddit.title} Members={JSON.stringify(subreddit.members)} />))
         setSubredditElements(subredditElements)
-        console.log("logging subredditelements" + JSON.stringify(subredditElements))
           
       }
       else{

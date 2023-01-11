@@ -19,7 +19,7 @@ const PostsList = () => {
 
   }
 
-  const [postElementsState, setPostElements] = useState();
+  const [postElementsState, setPostElements] = useState(<></>);
   
   console.log("outlet whatever"+useOutletContext())
   console.log()
@@ -27,7 +27,10 @@ const PostsList = () => {
 
 
   useEffect(() => {
-
+    if(!Number(id)){
+      setPostElements(<div>Invalid Url</div>)
+      return
+    }
 
     const getPosts = async () => {
 
@@ -44,7 +47,7 @@ const PostsList = () => {
       return data;
     }
 
-    const renderPosts = async () => {
+    const renderPosts = async () => { //adds posts to postelements state, which is what component returns
 
       const posts = await getPosts();
       console.log("RETURNING POST ELEMENTS")

@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import CreatePost from './components/CreatePost';
-import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import CreateSubreddit from './components/CreateSubreddit';
 import PostsList from './components/PostsList';
 import SubredditsList from './components/SubredditsList';
+import reportWebVitals from './reportWebVitals';
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import {AccessControl} from './util/AccessControl';
 import cookieUtils from './util/AccessControl';
 const cookieFuncs = new cookieUtils();
@@ -19,6 +20,10 @@ const appChildren: Array<object> = [
   {
     path: "subreddit/:id",
     element: <PostsList/>
+  },
+  {
+    path: "subreddit/",
+    element: <Navigate replace to="/" />
   }
 ] 
 const router = createBrowserRouter([
@@ -36,7 +41,10 @@ const router = createBrowserRouter([
     path: "/subreddit/:id/createPost",
     element: <AccessControl child = {<CreatePost/>}/>
   },
-  
+  {
+    path: "/subreddit/createSubreddit",
+    element: <CreateSubreddit/>
+  },  
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);

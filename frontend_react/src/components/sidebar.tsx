@@ -22,7 +22,12 @@ const Sidebar = () => {
                 <div className="icon" id="avatar-icon"/>
                 <input type="button" className="sidebar-item sidebar-button" id="" value={"Filler"}/>
             </div>
-            {filler_sidebar}
+            <div className="sidebar-item">
+                <div className="icon" id="avatar-icon"/>
+                {/*<input type="button" className="sidebar-item sidebar-button" id="" value={"Create Community"}/>*/}
+                <a  className="sidebar-item sidebar-anchor" id="" >Create Community</a>
+            
+            </div>
             {filler_sidebar}
             {filler_sidebar}
             {filler_sidebar}

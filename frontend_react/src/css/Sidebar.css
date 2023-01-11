@@ -17,6 +17,7 @@
 }
 
 .sidebar-item{
+    font-size: 1rem;
     height: 2.5rem;
     background-color: transparent;
     margin-top: 0.7rem;
@@ -24,7 +25,10 @@
     text-align: left;
     border: none;
 }
-
+.sidebar-item.sidebar-anchor{
+    display: inline-block;
+    padding-top: 0.7rem;    
+}
 #sidebar-search{
     height: 2.2rem;
     padding-left: 1rem;

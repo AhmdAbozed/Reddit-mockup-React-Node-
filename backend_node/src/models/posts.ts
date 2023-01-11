@@ -59,7 +59,7 @@ export class postsStore {
     
     async subredditPosts(subredditID: string): Promise<post[]> {
         try {
-            console.log(subredditID)
+            console.log("subreddit ID"+subredditID)
             const conn = await client.connect();
             const sql = 'SELECT * FROM posts WHERE subreddit_id=($1)';
             const results = await conn.query(sql, [subredditID]);

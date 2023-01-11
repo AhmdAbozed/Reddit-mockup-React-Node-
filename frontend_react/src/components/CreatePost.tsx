@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import "../css/CreatePost.css";
+import "../css/CreateForm.css";
 
 const CreatePost = () => {
     
@@ -10,7 +10,7 @@ const CreatePost = () => {
 
     useEffect(()=>{
         //sees if all fields are filled to enable button or not
-        const buttonElement = document.getElementById("create-post-submit");
+        const buttonElement = document.getElementById("create-form-submit");
         if(buttonState[0] == 1 && buttonState[1] == 1){
             buttonElement!.removeAttribute("disabled")
             buttonElement!.setAttribute("style", "background-color: rgb(110,110,110)")
@@ -45,24 +45,25 @@ const CreatePost = () => {
         }
         else if(resp.status == 404 || resp.status == 401){
             window.location.href = "/login"
+            //document.getElementById("result")!.innerHTML = "ERROR" + resp.status
         }
         return resp;
     }
   
     return (
-        <form id="create-post" action="" method="post" onSubmit={submitPost}>
-            <div className="create-post-item" id="create-post-head">
-                <a id="create-post-cancel" href={"/subreddit/" + id}/>
-                <div id="create-post-title">Text</div>
-                <button id="create-post-submit" aria-label="submit post" disabled>POST</button>
+        <form id="create-form" action="" method="post" onSubmit={submitPost}>
+            <div className="create-form-item gray-border-bottom " id="create-form-head">
+                <a id="create-form-cancel" href={"/subreddit/" + id}/>
+                <div className="gray " id="create-form-title">Text</div>
+                <button id="create-form-submit" aria-label="submit post" disabled>POST</button>
             </div>
-            <div id="create-post-item-container">
-                <div id="create-post-subreddit-icon"></div>
-                <div className="create-post-item" id="create-post-subreddit">r/subreddit</div>
-                <textarea aria-label="description" className="create-post-item"
+            <div id="create-form-item-container">
+                <div id="create-form-subreddit-icon"></div>
+                <div className="create-form-item" id="create-form-subreddit">r/subreddit</div>
+                <textarea aria-label="description" className="create-form-item"
                  cols={1} rows={1}
-                 name="desc" form="create-post" 
-                 id="create-post-desc-input"
+                 name="desc" form="create-form" 
+                 id="create-form-desc-input"
                  placeholder="Add your text..."
                  
                  onChange={(e)=>{
@@ -72,9 +73,9 @@ const CreatePost = () => {
                 >
                 </textarea>
 
-                <input aria-label="title" className="create-post-item"
+                <input aria-label="title" className="create-form-item"
                  type={"text"} name="title"
-                 id="create-post-title-input"
+                 id="create-form-title-input"
                  placeholder="Add an interesting title"
                  onChange={(e)=>{
                     if(e.target.value !="")setButtonState([1, buttonState[1]]);

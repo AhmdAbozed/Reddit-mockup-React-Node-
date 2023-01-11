@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./../css/LogInForm.css"
 const SignInForm = (props: {
     toggleLoginForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -8,6 +8,12 @@ const SignInForm = (props: {
   
     const [formState, setForm] = useState("login");
     const [emailState, setEmail] = useState("");
+    const resetErrors = ()=>{
+        document.getElementById("invalid-username-prompt")!.hidden = true;
+        document.getElementById("input-username")?.classList.remove("invalid-input")
+        document.getElementById("invalid-password-prompt")!.hidden = true;
+        document.getElementById("input-password")?.classList.remove("invalid-input")
+    }
     
     const submitForm = async (event: React.FormEvent<HTMLFormElement>)=>{
 
@@ -46,13 +52,16 @@ const SignInForm = (props: {
                 props.toggleLoginForm(false)
             }
             else{
-                document.getElementById("result")!.innerHTML = resJSON    
+                //document.getElementById("result")!.innerHTML = resJSON;
+                document.getElementById("invalid-username-prompt")!.hidden = false;
+                document.getElementById("invalid-username-prompt")!.innerHTML = resJSON;    
             }
             return res;
         }
         else{
             if(!userValidation){
                 document.getElementById("invalid-username-prompt")!.hidden = false;
+                document.getElementById("invalid-username-prompt")!.innerHTML = "Username must be 4-20 non-special characters"
                 document.getElementById("input-username")?.classList.add("invalid-input")
             } else {
                 document.getElementById("invalid-username-prompt")!.hidden = true;
@@ -72,6 +81,7 @@ const SignInForm = (props: {
     }
 
     const formHandler = ()=> {
+        
         const renderLogIn = ()=>{
             return <form className="user-form" id="signin-form" onSubmit={submitForm}>
                 <input type="button" id="signin-cancel" onClick={()=>{props.toggleLoginForm(false)}}/>
@@ -107,7 +117,7 @@ const SignInForm = (props: {
                 </div>
                 
                 <input type="submit" value="Log In" id="signin-submit" aria-label="signin submit" />
-                <div id="signup-prompt" >New to Reddit? <a href="" aria-label="sign up" onClick={(e)=>{e.preventDefault();setForm("emailsignup")}}>Sign up</a></div>
+                <div id="signup-prompt" >New to Reddit? <a href="" aria-label="sign up" onClick={(e)=>{e.preventDefault();resetErrors();setForm("emailsignup")}}>Sign up</a></div>
                 <div data-testid="result" id="result">
                     placeholder for testing
                 </div>
@@ -147,7 +157,8 @@ const SignInForm = (props: {
         }
 
         const renderSignUp = ()=>{
-            return <form className="user-form" id="signup-form" onSubmit={submitForm}>
+            return  <form className="user-form" id="signup-form" onSubmit={submitForm}>
+                
                 <input type="button" id="signin-cancel" onClick={()=>{props.toggleLoginForm(false)}}/> 
                 
                 <div id="signin-info">
@@ -169,17 +180,18 @@ const SignInForm = (props: {
                     <div id="invalid-password-prompt" className="invalid-prompt" hidden>Password must be 4-20 non-special characters</div>
                 </div>
                 <input type="submit" value="Sign Up" id="signin-submit" aria-label="signup submit" />
-                <div id="signup-prompt">Already a Redditor? <a href="" onClick={(e)=>{e.preventDefault();setForm("login")}}>Log In</a></div>
+                <div id="signup-prompt">Already a Redditor? <a href="" onClick={(e)=>{e.preventDefault();resetErrors();setForm("login")}}>Log In</a></div>
                 <div data-testid="result" id="result">
                     placeholder for testing
                 </div>
             </form>
+            
         }
 
        
 
         switch(formState){
-            case "login": return renderLogIn();break;
+            case "login": ;return renderLogIn();break;
             case "emailsignup": return renderEmailSignUp();break;
             case "signup": return renderSignUp();
         }

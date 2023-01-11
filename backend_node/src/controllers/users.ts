@@ -1,13 +1,15 @@
 import { body, validationResult } from 'express-validator';
-import  { Router } from "express"
-import  { Request, Response } from 'express'
+import { Router } from "express"
+import { Request, Response } from 'express'
 import { usersStore, user } from '../models/users.js';
 import dotenv from 'dotenv'
 //import {verifyAuthToken, redirectToHome, createToken} from "../util/tokenauth.js"
 import { tokenClass } from '../util/tokenauth.js';
+import { BaseError } from '../util/errorHandler.js';
+import { nextTick } from 'process';
 dotenv.config()
 
-const { tokenSecret, adminTokenSecret, adminUsername, adminPassword, HOST_PORT_URL} = process.env
+const { tokenSecret, adminTokenSecret, adminUsername, adminPassword, HOST_PORT_URL } = process.env
 
 //const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
@@ -23,96 +25,100 @@ const signUpPost = [
 
     body('Password').matches(/^\w{4,20}$/).withMessage("Password must be 4-20 characters"),
 
-    async function (req: Request, res: Response) {
-        
-        const errorArr = validationResult(req).array()
+    async function (req: Request, res: Response, next: any) {
+        try {
+            const errorArr = validationResult(req).array()
 
-        if (errorArr[0]) {
-            //An error is found
-            let errorPrompt = "";
-            for (const error of errorArr) {
-                errorPrompt += error.msg + "\n";
+            if (errorArr[0]) {
+                //An error is found
+                let errorPrompt = "";
+                for (const error of errorArr) {
+                    errorPrompt += error.msg + "\n";
+                }
+                console.log("ErrorArr: " + JSON.stringify(errorArr))
+                console.log("express-vali validationResult(req) " + validationResult(req))
+                throw new BaseError(403, JSON.stringify(errorPrompt));
+
             }
-            res.status(403).send(JSON.stringify(errorPrompt));
-            console.log("ErrorArr: " + JSON.stringify(errorArr))
-            console.log("express-vali validationResult(req) "+validationResult(req))
-            return;
-        }
 
-        const submission: user = {username: req.body.Username, password: req.body.Password, email: req.body.Email  }
-        console.log("submission thing [signup]: " + JSON.stringify(submission))
-        const validation = await store.validateSignUp(submission)
-        
-        if (validation[0]){
-            //username/email already exist
-            console.log("recieved validation: "+JSON.stringify(validation[0]))
-            let errorPrompt = "";
-            for (const error of validation) {
-                errorPrompt += error.msg + "\n";
+            const submission: user = { username: req.body.Username, password: req.body.Password, email: req.body.Email }
+            console.log("submission thing [signup]: " + JSON.stringify(submission))
+            const validation = await store.validateSignUp(submission)
+
+            if (validation[0]) {
+                //username/email already exist
+                console.log("recieved validation: " + JSON.stringify(validation[0]))
+                let errorPrompt = "";
+                for (const error of validation) {
+                    errorPrompt += error.msg + "\n";
+                }
+
+                console.log("ErrorPrompt signup: " + JSON.stringify(errorPrompt))
+                throw new BaseError(403, JSON.stringify(errorPrompt));
             }
-            res.status(403).send(JSON.stringify(errorPrompt));
-            console.log("ErrorPrompt signup: " + JSON.stringify(errorPrompt))
-            return;  
+
+            const result = await store.signup(submission)
+
+            await token.createRefreshToken(req, res, result)
+
+            console.log("result/End Of Sign Up Function: " + result)
         }
-
-        const result = await store.signup(submission)
-
-        await token.createRefreshToken(req,res,result)
-
-        console.log("result/End Of Sign Up Function: "+result)
+        catch(err){
+            next(err)
+        }
     }]
 
-    const signInPost = [
+const signInPost = [
 
-        body('Username')
-            .matches(/^\w{4,20}$/).withMessage("Username must be 4-20 characters"),
-    
-        body('Password').matches(/^\w{4,20}$/).withMessage("Password must be 4-20 characters"),
-    
-        async function (req: Request, res: Response) {
-    
-        try{    const errorArr = validationResult(req).array()
-    
+    body('Username')
+        .matches(/^\w{4,20}$/).withMessage("Username must be 4-20 characters"),
+
+    body('Password').matches(/^\w{4,20}$/).withMessage("Password must be 4-20 characters"),
+
+    async function (req: Request, res: Response, next:any) {
+
+        try {
+            const errorArr = validationResult(req).array()
+
             if (errorArr[0]) {
-              //An error is found
-              let errorPrompt = "";
-              for (const error of errorArr) {
-                  errorPrompt += error.msg + "\n";
-              }
-              res.status(403).send(errorPrompt);
-              console.log("ErrorArr: " + JSON.stringify(errorArr))
-              console.log("express-vali validationResult(req) "+validationResult(req))
-              return;
+                //An error is found
+                let errorPrompt = "";
+                for (const error of errorArr) {
+                    errorPrompt += error.msg + "\n";
+                }
+                
+                console.log("ErrorArr: " + JSON.stringify(errorArr))
+                console.log("express-vali validationResult(req) " + validationResult(req))
+                throw new BaseError(403, JSON.stringify(errorPrompt));
             }
-            
-            const submission: user = {username: req.body.Username, password: req.body.Password, email: req.body.Email  }
+
+            const submission: user = { username: req.body.Username, password: req.body.Password, email: req.body.Email }
             console.log("submission login thing: " + JSON.stringify(submission))
 
             const result = await store.signin(submission)
-    
+
             //createToken(res, result)
-            if(result[0]){
-                token.createRefreshToken(req,res,result[0])
+            if (result[0]) {
+                token.createRefreshToken(req, res, result[0])
             }
-            else{
-                res.status(403).send(JSON.stringify("Incorrect username or password"))
+            else {
+                throw new BaseError(403, "Incorrect Username or Password");
             }
-            
-            console.log("result/End Of Sign In Function: "+result)
-        
+
+            console.log("result/End Of Sign In Function: " + result)
+
         }
-    
-        catch(error){
-            res.status(500).send(JSON.stringify("Internal server error: "+ error))
+
+        catch (err) {
+            next(err)
         }
     }]
-    
 
-    const UsersRouter = Router()
-    UsersRouter.post("/users/signup", signUpPost);
-    
-    UsersRouter.post("/users/signin", signInPost);
-    //PostsRouter.post("/posts", postPosts)
-    
-    export default UsersRouter; 
-    
+
+const UsersRouter = Router()
+UsersRouter.post("/users/signup", signUpPost);
+
+UsersRouter.post("/users/signin", signInPost);
+//PostsRouter.post("/posts", postPosts)
+
+export default UsersRouter;

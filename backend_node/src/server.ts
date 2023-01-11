@@ -1,5 +1,4 @@
 import express from 'express'
-import { Request, Response } from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
@@ -7,6 +6,8 @@ import PostsRouter from './controllers/posts.js'
 import SubredditsRouter from './controllers/subreddits.js'
 import usersRouter from './controllers/users.js'
 import cookieParser from 'cookie-parser'
+import { BaseError, sendError } from './util/errorHandler.js'
+
 dotenv.config()
 
 const port = process.env.backendPort 
@@ -36,7 +37,6 @@ app.use(cors({
 }));
 
 app.use(cookieParser())
-//app.options('/*', (_, res) => {res.sendStatus(200);});
 
 app.listen(port, function () {
     console.log(`starting app on: ${address}`)
@@ -45,5 +45,6 @@ app.listen(port, function () {
 app.use('/', PostsRouter)
 app.use('/', SubredditsRouter)
 app.use('/', usersRouter)
+app.use(sendError)
 
 export {app}

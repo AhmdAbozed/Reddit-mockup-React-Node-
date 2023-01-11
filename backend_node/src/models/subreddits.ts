@@ -6,7 +6,9 @@ export type subreddit = {
 
     id?: Number;
     title: string;
-    members: Number;
+    owner_id: Number;
+    type: "public" | "private" | "restricted";
+    members?: Number;
 
 }
 
@@ -27,10 +29,10 @@ export class subredditsStore {
 
     async create(subreddit: subreddit): Promise<subreddit> {
         try {
-
+            console.log("about to query sub: "+JSON.stringify(subreddit))
             const conn = await client.connect();
-            const sql = 'INSERT INTO subreddits (title, members) VALUES ($1, $2, $3) RETURNING *';
-            const results = await conn.query(sql, [subreddit.title, subreddit.members]);
+            const sql = 'INSERT INTO subreddits (title, owner_id, subtype, members) VALUES ($1, $2, $3, $4) RETURNING *';
+            const results = await conn.query(sql, [subreddit.title, subreddit.owner_id, subreddit.type, 1]);
             conn.release();
             //@ts-ignore
             return results.rows[0];

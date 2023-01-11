@@ -102,7 +102,8 @@ test('Signing In. [Integration Test]', async () => {
 })
 
 
-test('Post creation without logging in. [Integration Test]', async () => {
+test('Post creation without logging in redirects to login [Integration Test]', async () => {
+  //post creation requires cookies which is tricky in this env, test is expected to fail at creation
   const user = userEvent.setup()
   const element = render(
     <MemoryRouter initialEntries={['/subreddits/1/createPost']}>

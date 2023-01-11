@@ -3,7 +3,8 @@ import { postsStore, post } from '../models/posts.js';
 import dotenv from 'dotenv'
 import Router from 'express'
 import { tokenClass } from '../util/tokenauth.js';
-
+import { BaseError } from '../util/errorHandler.js';
+import { nextTick } from 'process';
 
 
 dotenv.config()
@@ -19,19 +20,32 @@ let psuedoPost: post = {op_id: -1, title: "NULL", text: "NULL", img: "NULL", vot
 
 const store = new postsStore();
 
-const getPosts = async function (req: Request, res: Response) {
-    
-    const result = await store.subredditPosts(req.params.id)
-    console.log(result[0])
-    res.send(result);
+const getPosts = async function (req: Request, res: Response, next: any) {
+    try{
+        if(!Number(req.params.id)){
+            throw new BaseError(400, "Failed to fetch post, invalid/missing subreddit id at url")
+        }
+        const result = await store.subredditPosts(req.params.id)
 
+        res.send(result);
+    }
+    catch(err){
+        next(err)
+    }
 }
 
-const postPosts = async function (req: Request, res: Response) {
-    try{
+const postPosts = async function (req: Request, res: Response, next: any) {
+    
         console.log("post controller: the Desc " + req.body.Text);
         console.log("post controller: the Title " + req.body.Title);
-        const payload = JSON.parse(Buffer.from(req.cookies.refreshToken.split('.')[1],'base64').toString() )
+        let payload;
+        try {
+            payload = JSON.parse(Buffer.from(req.cookies.refreshToken.split('.')[1],'base64').toString() )
+        }catch{
+            //something's wrong with the refreshtoken.
+            next(new BaseError(403, "Invalid refresh token"))
+            return;
+        }
         console.log("payload"+payload)
         psuedoPost.text = req.body.Text;
         psuedoPost.title = req.body.Title;        
@@ -39,12 +53,15 @@ const postPosts = async function (req: Request, res: Response) {
         psuedoPost.op_id = Number(payload.user_id)
         const result = await store.create(psuedoPost);
         console.log("posting post result: " + JSON.stringify(result))
-        if(result)res.sendStatus(200);
-        else res.sendStatus(403)
-    }
-    catch(err) {
-            console.log("Error parsing the files: " + err);
+        
+        try{
+            if(result)res.sendStatus(200);
+            else throw new BaseError(403, "Post creation failed.")
         }
+        catch(err){
+            next(err)
+        }
+        
 
     }
 

@@ -2,6 +2,10 @@ import { Request, Response } from 'express'
 import { subredditsStore, subreddit } from '../models/subreddits.js';
 import dotenv from 'dotenv'
 import Router from 'express'
+import { tokenClass } from '../util/tokenauth.js';
+import { BaseError } from '../util/errorHandler.js';
+
+const tokenFuncs = new tokenClass()
 
 const SubredditsRouter = Router();
 
@@ -20,25 +24,33 @@ const getSubreddits = async function (req: Request, res: Response) {
     res.status(200).send(result);
 
 }
+const postSubreddit = async function (req: Request, res: Response, next: any) {
+    try {
+        const payload = JSON.parse(Buffer.from(req.cookies.refreshToken.split('.')[1], 'base64').toString())
 
-/*
-const postPosts = async function (req: Request, res: Response) {
-    try{
-        console.log("the body " + req.body.Text);
-        
-        psuedoPost.text = req.body.Text;
-        psuedoPost.title = req.body.Title;        
-
-        const result = await store.create(psuedoPost);
-        console.log("posting post result: " + result)
-        if(result)res.sendStatus(200);
-    }
-    catch(err) {
-            console.log("Error parsing the files: " + err);
+        if ((req.body.Type != "public" && req.body.Type != "private" && req.body.Type != "restricted")) {
+            throw new BaseError(400, "Subreddit Creation Error: Invalid subreddit type")
         }
+
+        const subreddit: subreddit = {
+            title: req.body.Title,
+            owner_id: Number(payload.user_id),
+            type: req.body.Type,
+        }
+
+        console.log("posting subreddit input: " + JSON.stringify(subreddit))
+
+        const result = await store.create(subreddit);
+        console.log("posting subreddit result: " + JSON.stringify(result))
+        if (result) res.sendStatus(200);
+        else throw new BaseError(403, "Subreddit creation failed.")
     }
-*/
+    catch (err) {
+        next(err)
+    }
+}
+
 SubredditsRouter.get("/subreddits", getSubreddits);
-//PostsRouter.post("/posts", postPosts)
+SubredditsRouter.post("/subreddits", tokenFuncs.verifyAccessToken.bind(tokenFuncs), postSubreddit);
 
 export default SubredditsRouter; 

@@ -1,34 +1,41 @@
-.create-post-item{
-    box-sizing: border-box;
+.gray{
+    color: rgb(97, 97, 97);
+}
+
+.gray-border-bottom{
     border: none;
     border-bottom: 3px rgb(224 224 224) solid;
 }
 
-#create-post-item-container{
+.create-form-item{
+    box-sizing: border-box;
+
+}
+
+#create-form-item-container{
     margin: 0 0.5rem 0 0.5rem;
 }
 
-#create-post-title{
+#create-form-title{
     align-self: center;
     margin-left: 0.5rem;
-    color: rgb(160, 160, 160);
 }
-#create-post-head{
-    border-bottom: 3px rgb(224 224 224) solid;
+#create-form-head{
+
     display: flex;
     flex-direction: row;
     align-content: space-between;
     height: 2.5rem;
     margin: 0;
 }
-#create-post-subreddit{
+#create-form-subreddit{
     line-height: 3rem;
     font-size: 1.2rem;
     padding-left: 1rem;
     height: 3rem;
     color: rgb(160, 160, 160); 
 }
-#create-post-cancel{
+#create-form-cancel{
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -39,7 +46,7 @@
     margin: auto 0 auto 0.5rem; 
 }
 
-#create-post-submit{
+#create-form-submit{
     margin: auto 0.3rem auto auto;
     height: 1.8rem;
     border: none;
@@ -47,17 +54,25 @@
      background-color: rgb(222, 222, 222);
 }
 
-#create-post-title-input{
+#create-form-title-input{
     height: 2.5rem;
     width: 100%;
     font-size: 1.3rem;
     padding: 0.5rem;
 }
-
-#create-post-desc-input{
+#create-form-title-input::placeholder{
+    color: rgb(177, 177, 177);
+}
+#create-form-desc-input{
     height: 6rem;
     width: 100%;
     font-size: 1.3rem;
     padding-left: 0.5rem;
     padding-top: 1rem;
+}
+
+.create-form-radio{
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    margin-left: 1rem;
 }

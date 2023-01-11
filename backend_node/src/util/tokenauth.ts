@@ -9,98 +9,99 @@ import jwt, { Secret } from 'jsonwebtoken'
 import path from "path"
 import client from '../database.js'
 import { user } from '../models/users.js'
-
+import { BaseError, sendError } from './errorHandler.js'
 
 dotenv.config()
 
 const { tokenSecret, adminTokenSecret } = process.env;
 class tokenClass {
-  //If permission = "admin", admin token is added to response along with user token.
+
   createAccessToken(req: Request, res: Response, next?: any) {
-    try {
-      console.log("inside createaccess")
-      const options = {
-        expires: new Date(Date.now() + 10 * 60 * 1000), // 10 mins
-        secure: false, //http or https, will change later
-        httpOnly: true, //To prevent client-side access to cookies
-      }
 
-
-      const token = jwt.sign({ data: "ayy" }, tokenSecret as string)
-
-      res.cookie('accessToken', token, options);
-      res.cookie('accessTokenExists', "", {
-        expires: new Date(Date.now() + 10 * 60 * 1000), // 10 mins
-        secure: false, //http or https, will change later
-        httpOnly: false, //To prevent client-side access to cookies
-      });
-      if(next){
-        console.log("next found inside createaccesstoken")
-        next();
-        return;
-      }
-      res.status(200).send(JSON.stringify("access and refresh created"))
+    console.log("inside createaccess")
+    const options = {
+      expires: new Date(Date.now() + 10 * 60 * 1000), // 10 mins
+      secure: false, //http or https, will change later
+      httpOnly: true, //To prevent client-side access to cookies
     }
-    catch (error) {
-      res.status(403).send(JSON.stringify("Error creating access token: .") + error)
-    }
-  }
-  async createRefreshToken(req: Request, res: Response, user: user, permission?: string): Promise<any> {
-    try {
-      console.log("inside createrefresh")
-      const options = {
-        expires: new Date(Date.now() + 7 * 24 * 60 * 1000), // 7 days
-        secure: false, //http or https, will change later
-        httpOnly: true, //To prevent client-side access to cookies
-      }
 
-      const token = jwt.sign({ user: user.username, user_id: user.id }, tokenSecret as string)
-      const conn = await client.connect();
-      const sql = 'INSERT INTO refreshtokens (user_id, token) VALUES ($1, $2) RETURNING *';
-      const results = await conn.query(sql, [user.id, token]);
-      conn.release();
 
-      console.log("about to send cookies [refresh]")
+    const token = jwt.sign({ data: "ayy" }, tokenSecret as string)
 
-      res.cookie('refreshToken', token, options);
-      res.cookie('refreshTokenExists', "", {
-        expires: new Date(Date.now() + 7 * 24 * 60 * 1000), // 7 days
-        secure: false, //http or https, will change later
-        httpOnly: false, //To prevent client-side access to cookies
-      })
+    res.cookie('accessToken', token, options);
 
-      console.log("sent all cookies [refresh]")
-      this.createAccessToken(req, res);
+    //empty cookie to tell the frontend the httponly cookies exist 
+    res.cookie('accessTokenExists', "", {
+      expires: new Date(Date.now() + 10 * 60 * 1000),
+      secure: false,
+      httpOnly: false,
+    });
+    if (next) {
+      //function is either called independently or part of middleware, then it has a next
+      console.log("next found inside createaccesstoken")
+      next();
       return;
     }
-    catch (error) {
-      res.status(403).send(JSON.stringify("Error creating refresh token: ." + error))
-    }
+    res.status(200).send(JSON.stringify("access and refresh created"))
   }
 
-  
-  verifyAccessToken(req: Request, res: Response, next: any){
-    console.log("inside verifyaccess")
-      const __dirname = path.resolve();
+  async createRefreshToken(req: Request, res: Response, user: user, permission?: string): Promise<any> {
+    console.log("inside createrefresh")
+    const options = {
+      expires: new Date(Date.now() + 7 * 24 * 60 * 1000), // 7 days
+      secure: false, //http or https, will change later
+      httpOnly: true, //To prevent client-side access to cookies
+    }
 
+    const token = jwt.sign({ user: user.username, user_id: user.id }, tokenSecret as string)
+    const conn = await client.connect();
+    const sql = 'INSERT INTO refreshtokens (user_id, token) VALUES ($1, $2) RETURNING *';
+    const results = await conn.query(sql, [user.id, token]);
+    conn.release();
+
+    console.log("about to send cookies [refresh]")
+
+    res.cookie('refreshToken', token, options);
+    res.cookie('refreshTokenExists', "", {
+      expires: new Date(Date.now() + 7 * 24 * 60 * 1000), // 7 days
+      secure: false, //http or https, will change later
+      httpOnly: false, //To prevent client-side access to cookies
+    })
+
+    console.log("sent all cookies [refresh]")
+    this.createAccessToken(req, res);
+    return;
+  }
+
+
+  verifyAccessToken(req: Request, res: Response, next: any) {
+    console.log("inside verifyaccess")
+    if(!req.cookies.refreshToken){
+      //no refresh token, let refreshfunction handle it
+      this.verifyRefreshToken(req, res, next);
+    }
+    if (req.cookies.accessToken) {
+      console.log("Accesstoken exists, verifying..")
+      const token: string = req.cookies.accessToken;
       try {
-        if (req.cookies.accessToken) {
-          console.log("Accesstoken exists, verifying..")
-          const token: string = req.cookies.accessToken;
-          const decoded = jwt.verify(token, tokenSecret as Secret)
-          next()
-        }
-        else { //no access token, verify that refresh exists to create new access token
-          console.log("Accesstoken doesnt exist")
-          this.verifyRefreshToken(req, res, next);
-        }
+        jwt.verify(token, tokenSecret as Secret, (err) => { if (err){throw new Error()}})
+
+        console.log("MADE IT NEXT TO NEXT")
+        next()
       }
       catch (error) {
-        console.log("verify access error: "+error)
-        res.status(403).send(JSON.stringify("Invalid Authentication Token. [access Token]"))
+        //accesstoken has been tampered with, create new one
+        this.verifyRefreshToken(req, res, next);
       }
     }
-  
+    else { //no access token, verify that refresh exists to create new access token
+      console.log("Accesstoken doesnt exist")
+      this.verifyRefreshToken(req, res, next);
+    }
+
+
+  }
+
 
 
 
@@ -112,7 +113,12 @@ class tokenClass {
 
       if (req.cookies.refreshToken) {
         const token: string = req.cookies.refreshToken;
-        const decoded = jwt.verify(token, tokenSecret as Secret)
+        jwt.verify(token, tokenSecret as Secret, function (err) {
+          if (err) {
+            console.log(JSON.stringify(err))
+            throw new BaseError(403, err.message)
+          }
+        })
         const conn = await client.connect();
         const sql = 'SELECT FROM refreshtokens wHERE token=($1)';
         const results = await conn.query(sql, [token]);
@@ -122,17 +128,17 @@ class tokenClass {
           this.createAccessToken(req, res, next)
         }
         else {//refreshtoken doesnt exist in db
-          res.status(404).send(JSON.stringify("No refresh token, redirect to login"))//idk if this is the correct error code
+          throw new BaseError(404, "refresh token not found, redirect to login")
         }
 
       }
       else {
-        res.status(401).send(JSON.stringify("refresh token expired."))
+        throw new BaseError(401, "refresh token missing/expired.")
       }
     }
     catch (error) {
-      console.log(error)
-      res.status(403).send(JSON.stringify("Invalid refresh token."))
+      console.log("CAUGHT ERROR IN REFRESH: " + JSON.stringify(error))
+      next(error)
     }
   }
 }
