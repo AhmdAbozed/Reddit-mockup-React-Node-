@@ -1,8 +1,26 @@
 
-
-@media (min-width: 821px){
-    .posts-list, .subreddits-list{
-        margin: auto;
-        width: 800px;
-    }
+html{
+    min-height: 100%;
+}
+body{
+    background: linear-gradient(rgb(14 14 29), rgb(14 14 20));
+    height: 100%;
+}
+a{
+    text-decoration: none;
+    color: inherit;
+}
+.colored{
+    background: linear-gradient(rgb(20 29 43), rgb(19 28 42) 50% );
+    color:aliceblue
+}
+.button{
+    border: none;
+    background-color: rgb(255, 102, 0);
+    border-radius: 100px;
+    color: antiquewhite;
+    cursor:pointer;
+}
+#app-container{
+    display: grid;
 }

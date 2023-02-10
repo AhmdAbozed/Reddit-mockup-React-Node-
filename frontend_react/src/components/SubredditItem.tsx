@@ -7,7 +7,7 @@ const Subreddit_Item = (props:{key: string,ID: string, Title: string, Members: s
     //href={"/subreddit/"+props.ID}
 
     return (        
-        <div className= "post-item" onClick={(e)=>{if(window.getSelection()?.toString().length === 0)window.location.href = "/subreddit/"+props.ID}}>
+        <div className= "post-item colored" onClick={(e)=>{if(window.getSelection()?.toString().length === 0)window.location.href = "/subreddit/"+props.ID}}>
             {/*using anchors prevents text selection*/}
             <div className="inline post-item-sub-icon" />
             <div className="post-item-subreddit">r/subreddit</div>

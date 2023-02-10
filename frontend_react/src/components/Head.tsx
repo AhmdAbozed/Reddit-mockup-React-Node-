@@ -28,7 +28,6 @@ const Head = (props: {
 
     const renderLoginButton = ()=>{
         if(!(cookieFuncs.hasRefreshToken())){
-            console.log("Yup, Has the stuff")
             return   <input type="button" className="head-item head-button" id="signin-button" aria-label="sign in" value={"Log In"} onClick={
             () => {
                 props.toggleLoginForm(true)
@@ -43,6 +42,7 @@ const Head = (props: {
             <header id="head">
                 <div className="head-item" id="logo"><a href="/" className="anchor"><span/></a></div>
                 <div className="head-item dropdown" id="communities-dropdown" hidden>-communities dropdown-</div>
+                <input type="text" className="head-item" id="head-search" placeholder="Search.."/>
                 <input type="button" className="head-item head-button" id="use-app-button" value={"Use App"} />
                 {renderLoginButton()}
                 {renderPostCreation()}

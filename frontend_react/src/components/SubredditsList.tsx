@@ -58,9 +58,9 @@ const SubredditsList = () => {
   }, [])
 
   return (
-    <>
+    <div className="subreddits-list">
       {subredditElementsState}
-    </>
+    </div>
   )
 }
 

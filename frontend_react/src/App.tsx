@@ -4,7 +4,7 @@ import Sidebar from "./components/sidebar";
 import "./css/App.css"
 import { Outlet } from "react-router-dom";
 import LogInForm from "./components/LogInForm";
-const App =  ({loginOn = false} ) => {
+const App = ({ loginOn = false }) => {
   const [sidebarState, toggleSidebar] = useState(false);
   const [loginFormState, toggleLoginForm] = useState(loginOn);
   const [subredditState, setSubredditState] = useState(-1)
@@ -20,16 +20,16 @@ const App =  ({loginOn = false} ) => {
     }
     else return;
   }
- 
+
 
   return (
-    <div>
+    <div id="app-container">
 
       <Head toggleSidebar={toggleSidebar} toggleLoginForm={toggleLoginForm} sidebarState={sidebarState} subredditId={subredditState} />
       {renderSidebar()}
       {renderLoginForm()}
-      <div className="posts-list">
-        <Outlet context={[subredditState, setSubredditState]}/>
+      <div>
+        <Outlet context={[subredditState, setSubredditState]} />
       </div>
 
     </div>

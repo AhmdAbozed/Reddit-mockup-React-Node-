@@ -4,8 +4,6 @@ import "../css/CreateForm.css";
 
 const CreateSubreddit = () => {
 
-    let { id } = useParams();
-
     const [buttonState, setButtonState] = useState([0, 0]);
 
     useEffect(() => {
@@ -61,7 +59,7 @@ const CreateSubreddit = () => {
     return (
         <form id="create-form" action="" method="post" onSubmit={submitPost}>
             <div className="create-form-item gray-border-bottom " id="create-form-head">
-                <a id="create-form-cancel" href={"/subreddit/" + id} />
+                <a id="create-form-cancel" href={"/"} />
                 <div className="gray " id="create-form-title">Create Subreddit</div>
                 <button id="create-form-submit" aria-label="create subreddit" disabled>CREATE</button>
             </div>
@@ -73,6 +71,7 @@ const CreateSubreddit = () => {
                     id="create-form-title-input"
                     placeholder="Add an interesting title"
                     required
+                    autoComplete="off"
                     onChange={(e) => {
                         if (e.target.value != "") setButtonState([1, buttonState[1]]);
                         else setButtonState([0, buttonState[1]]);
@@ -87,18 +86,18 @@ const CreateSubreddit = () => {
                     document.getElementById("private-sub")!.value)}>Subreddit Type</strong>
                 <div className="gray-border-bottom">
                     <div className="create-form-radio">
-                        <input type="radio" id="public-sub" name="subtype" value="public" onClick={radioChecked}  required/>
+                        <input type="radio" id="public-sub" name="subtype" value="public" onClick={radioChecked} autoComplete="off"  required/>
                         <label htmlFor="public-sub">Public</label>
                         <small className="gray"> Anyone can view, post, and comment to this community</small>
 
                     </div>
                     <div className="create-form-radio">
-                        <input type="radio" id="private-sub" name="subtype" value="private" onClick={radioChecked} />
+                        <input type="radio" id="private-sub" name="subtype" value="private" onClick={radioChecked} autoComplete="off" />
                         <label htmlFor="private-sub">Private</label>
                         <small className="gray"> Only approved users can view and submit to this community</small>
                     </div>
                     <div className="create-form-radio">
-                        <input type="radio" id="restricted-sub" name="subtype" value="restricted" onClick={radioChecked} />
+                        <input type="radio" id="restricted-sub" name="subtype" value="restricted" onClick={radioChecked} autoComplete="off" />
                         <label htmlFor="restricted-sub">Restricted</label>
                         <small className="gray">  Anyone can view this community, but only approved users can post</small>
 

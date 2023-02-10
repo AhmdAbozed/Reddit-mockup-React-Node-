@@ -39,7 +39,7 @@
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url("../../resources/cancel.svg");
+    background-image: url("../../public/resources/cancel.svg");
 
     width: 1.5rem;
     height: 1.5rem;

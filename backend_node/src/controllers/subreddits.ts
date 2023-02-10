@@ -17,10 +17,17 @@ const { adminTokenSecret, blazeKeyId, blazeKey, HOST_PORT_URL } = process.env
 
 const store = new subredditsStore();
 
-const getSubreddits = async function (req: Request, res: Response) {
+const index = async function (req: Request, res: Response) {
 
     const result = await store.index();
     console.log(result[0])
+    res.status(200).send(result);
+
+}
+const getSubreddit = async function (req: Request, res: Response) {
+    console.log("params id of subreddit get: "+req.params.id)
+    const result = await store.read(req.params.id);
+    console.log(result)
     res.status(200).send(result);
 
 }
@@ -36,6 +43,7 @@ const postSubreddit = async function (req: Request, res: Response, next: any) {
             title: req.body.Title,
             owner_id: Number(payload.user_id),
             type: req.body.Type,
+            creation_date: new Date().toLocaleDateString()
         }
 
         console.log("posting subreddit input: " + JSON.stringify(subreddit))
@@ -50,7 +58,8 @@ const postSubreddit = async function (req: Request, res: Response, next: any) {
     }
 }
 
-SubredditsRouter.get("/subreddits", getSubreddits);
+SubredditsRouter.get("/subreddits", index);
+SubredditsRouter.get("/subreddits/:id", getSubreddit);
 SubredditsRouter.post("/subreddits", tokenFuncs.verifyAccessToken.bind(tokenFuncs), postSubreddit);
 
 export default SubredditsRouter; 

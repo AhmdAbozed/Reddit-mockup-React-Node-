@@ -28,20 +28,18 @@
 }
 
 .user-form{
-position: relative;
-z-index: 1;
-display: flex;
-flex-direction: column;
-width: 24rem;
-height: 23rem;
-background-color: rgb(255, 255, 255);
-border-radius: 1rem;
-overflow: hidden;
-padding: 1rem 0 1rem 0;
-margin:3rem auto 0 auto;
-align-items: center;
-animation-name: slidein;
-animation-duration: 0.5s;
+    display: flex;
+    position: relative;
+    z-index: 1;
+    max-width: 24rem;
+    height: 23rem;
+    background-color: rgb(255, 255, 255);
+    border-radius: 1rem;
+    overflow: hidden;
+    padding: 1rem 0.5rem 1rem 0.5rem;
+    margin:6rem auto 0 auto;
+    animation-name: slidein;
+    animation-duration: 0.5s;
 }
 
 #signin-cancel{
@@ -49,7 +47,7 @@ animation-duration: 0.5s;
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url("../../resources/cancel.svg");
+    background-image: url("../../public/resources/cancel.svg");
     
     position: absolute; 
     width: 1rem;
@@ -157,4 +155,15 @@ animation-duration: 0.5s;
 .invalid-prompt{
     color: red;
 
+}
+
+#login-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+}
+
+#input-email{
+    margin-bottom: 2rem;
 }

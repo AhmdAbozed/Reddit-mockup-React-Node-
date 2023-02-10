@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./../css/Font.css"
 import "./../css/Post_Item.css"
 
-const Post_Item = (props:{key: string,Id: string, Title: string, Text: string, Votes: number, Op_id: number, Op: string}) => {
+const Post_Item = (props:{key: string,Id: string, Title: string, Text: string, Votes: number, Op_id: number, Op: string, Subreddit: string}) => {
     
     const [voteState, setVote] = useState("neutral");
     const [voteCount, setCount] = useState(()=>{return props.Votes})
@@ -31,9 +31,9 @@ const Post_Item = (props:{key: string,Id: string, Title: string, Text: string, V
         }
     }   
     return (
-        <div className= "post-item">
+        <div className= "post-item colored">
             <div  className="inline post-item-sub-icon" />
-            <div className="post-item-subreddit">r/subreddit</div>
+            <div className="post-item-subreddit">r/{props.Subreddit}</div>
             <div className="post-item-op">{"u/"+props.Op}</div>
             
             <div className="post-item-title">{props.Title}</div>
@@ -41,7 +41,7 @@ const Post_Item = (props:{key: string,Id: string, Title: string, Text: string, V
             <div className="post-item-details">
                 <input type={"button"} className="inline small-icon upvote hollow" id={props.Id + "upvote"} onClick={voteChange}/>
                 <div className="inline vote-count" id={props.Id + "votecount"}></div>
-                <div className="inline small-icon downvote hollow" id={props.Id + "downvote"} onClick={voteChange}></div>
+                <input type={"button"} className="inline small-icon downvote hollow" id={props.Id + "downvote"} onClick={voteChange}/>
                 <div className="inline awards-icon">|+|</div>
             </div>
         </div>        

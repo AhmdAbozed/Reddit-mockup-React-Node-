@@ -4,7 +4,7 @@ import client from '../database.js'
 
 export type post = {
     id?: Number;
-    op_id:Number;
+    op_id: Number;
     title: string;
     text: string;
     img: string;
@@ -29,7 +29,7 @@ export class postsStore {
 
     async create(post: post): Promise<post> {
         try {
-            
+
             const conn = await client.connect();
             const sql = 'INSERT INTO posts (op, title, text, img, votes, subreddit_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
             const results = await conn.query(sql, [post.op_id, post.title, post.text, post.img, post.votes, post.subreddit_id]);
@@ -44,9 +44,10 @@ export class postsStore {
 
     async read(id: string): Promise<post> {
         try {
-            
+
             const conn = await client.connect();
-            const sql = 'SELECT * FROM posts WHERE id=($1)';
+            const sql = `SELECT op, posts.title post_title, img, text, votes, subreddit_id, subreddits.title subreddit_title, members 
+            FROM POSTS JOIN subreddits ON posts.id = 5 AND posts.subreddit_id=subreddits.id`;
             const results = await conn.query(sql, [id]);
             conn.release();
             //@ts-ignore
@@ -56,15 +57,15 @@ export class postsStore {
             throw new Error(`${err}`)
         }
     }
-    
+
     async subredditPosts(subredditID: string): Promise<post[]> {
         try {
-            console.log("subreddit ID"+subredditID)
+            console.log("subreddit ID" + subredditID)
             const conn = await client.connect();
             const sql = 'SELECT * FROM posts WHERE subreddit_id=($1)';
             const results = await conn.query(sql, [subredditID]);
             conn.release();
-            
+
             return results.rows;
         }
         catch (err) {
