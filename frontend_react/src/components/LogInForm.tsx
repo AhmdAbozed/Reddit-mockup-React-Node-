@@ -49,10 +49,11 @@ const SignInForm = (props: {
             
             if(res.status == 200 ){
                 document.getElementById("result")!.innerHTML = "200. Response recieved"
-                props.toggleLoginForm(false)
+                window.location.reload()
             }
             else{
-                //document.getElementById("result")!.innerHTML = resJSON;
+                console.log("invalid credentials")
+
                 document.getElementById("invalid-username-prompt")!.hidden = false;
                 document.getElementById("invalid-username-prompt")!.innerHTML = resJSON;    
             }

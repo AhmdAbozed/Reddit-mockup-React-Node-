@@ -24,11 +24,21 @@ const index = async function (req: Request, res: Response) {
     res.status(200).send(result);
 
 }
-const getSubreddit = async function (req: Request, res: Response) {
-    console.log("params id of subreddit get: "+req.params.id)
-    const result = await store.read(req.params.id);
-    console.log(result)
-    res.status(200).send(result);
+const getSubreddit = async function (req: Request, res: Response, next: any) {
+    try{
+        console.log("params id of subreddit get: "+req.params.id)
+        if(!Number(req.params.id)){
+            throw new BaseError(400, "Failed to fetch subreddit, invalid/missing subreddit URL id")
+        }
+        const result = await store.read(Number(req.params.id));
+        if(result){
+            res.status(200).send(result);    
+        }else res.status(404).send(JSON.stringify("Subreddit not found"))
+    }
+    catch(err){
+        next(err)
+    }
+
 
 }
 const postSubreddit = async function (req: Request, res: Response, next: any) {
@@ -37,6 +47,9 @@ const postSubreddit = async function (req: Request, res: Response, next: any) {
 
         if ((req.body.Type != "public" && req.body.Type != "private" && req.body.Type != "restricted")) {
             throw new BaseError(400, "Subreddit Creation Error: Invalid subreddit type")
+        }
+        if(!Number(payload.user_id)){
+            throw new BaseError(400, "Subreddit Creation Error: Invalid user id")
         }
 
         const subreddit: subreddit = {

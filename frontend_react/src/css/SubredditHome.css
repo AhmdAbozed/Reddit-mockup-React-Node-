@@ -74,7 +74,6 @@
         display: grid;
         max-width: 62rem;
         margin: 0 auto 0 auto;
-        
         grid-template-columns: 2.5fr 1fr;
         column-gap: 1rem;
         grid-template-areas: 
@@ -83,7 +82,7 @@
     
     }
     #subreddit-sidebar-container{
-        position: stickyq;                                                                                                                                      
+        /*position: stickyq*/                                                                                                                                      
     }
     #subreddit-sidebar{
         display: flex;

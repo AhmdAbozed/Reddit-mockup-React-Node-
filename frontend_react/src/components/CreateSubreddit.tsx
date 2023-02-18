@@ -46,12 +46,12 @@ const CreateSubreddit = () => {
             console.log("Created post successfully. 200")
             document.getElementById("result")!.innerHTML = "200. Response recieved"
         }
-        else if (resp.status == 404 || resp.status == 401) {
+        else if (resp.status == 404 || resp.status == 401 || resp.status == 403) {
             window.location.href = "/login"
-            console.log("internal server" + resp.status)
+            console.error("Internal Server Error: " + resp.status)
         }
         
-        console.log("internal server" + resp.status)
+
         return resp;
         
     }

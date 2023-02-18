@@ -13,8 +13,6 @@ class cookieUtils {
     }
 
     hasRefreshToken() {
-        console.log(document.cookie.includes("accessToken") + " result of cookie check inside hastoken")
-
         console.log(document.cookie + " result of cookie inside hastoken")
         if (document.cookie.includes("refreshTokenExists")) {
             return true;

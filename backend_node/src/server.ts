@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import PostsRouter from './controllers/posts.js'
 import SubredditsRouter from './controllers/subreddits.js'
 import usersRouter from './controllers/users.js'
+import SubredditMembersRouter from './controllers/subreddit_members.js'
 import cookieParser from 'cookie-parser'
 import { BaseError, sendError } from './util/errorHandler.js'
 
@@ -45,6 +46,7 @@ app.listen(port, function () {
 app.use('/', PostsRouter)
 app.use('/', SubredditsRouter)
 app.use('/', usersRouter)
+app.use('/',SubredditMembersRouter)
 app.use(sendError)
 
 export {app}

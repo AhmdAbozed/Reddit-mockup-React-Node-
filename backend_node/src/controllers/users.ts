@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 //import {verifyAuthToken, redirectToHome, createToken} from "../util/tokenauth.js"
 import { tokenClass } from '../util/tokenauth.js';
 import { BaseError } from '../util/errorHandler.js';
-import { nextTick } from 'process';
+
 dotenv.config()
 
 const { tokenSecret, adminTokenSecret, adminUsername, adminPassword, HOST_PORT_URL } = process.env
@@ -63,7 +63,7 @@ const signUpPost = [
 
             console.log("result/End Of Sign Up Function: " + result)
         }
-        catch(err){
+        catch (err) {
             next(err)
         }
     }]
@@ -75,7 +75,7 @@ const signInPost = [
 
     body('Password').matches(/^\w{4,20}$/).withMessage("Password must be 4-20 characters"),
 
-    async function (req: Request, res: Response, next:any) {
+    async function (req: Request, res: Response, next: any) {
 
         try {
             const errorArr = validationResult(req).array()
@@ -86,7 +86,7 @@ const signInPost = [
                 for (const error of errorArr) {
                     errorPrompt += error.msg + "\n";
                 }
-                
+
                 console.log("ErrorArr: " + JSON.stringify(errorArr))
                 console.log("express-vali validationResult(req) " + validationResult(req))
                 throw new BaseError(403, JSON.stringify(errorPrompt));
@@ -112,12 +112,20 @@ const signInPost = [
         catch (err) {
             next(err)
         }
-    }]
+        
+    }
+]
 
-
+const signOut = async function (req: Request, res: Response, next: any){
+    res.clearCookie("refreshToken", {secure: false, httpOnly: true})
+    res.clearCookie("refreshTokenExists", {secure: false, httpOnly: false})
+    res.clearCookie("accessToken", {secure: false, httpOnly: true})
+    res.sendStatus(200);
+}
 const UsersRouter = Router()
-UsersRouter.post("/users/signup", signUpPost);
 
+UsersRouter.post("/users/signup", signUpPost);
+UsersRouter.get("/users/signout", signOut);
 UsersRouter.post("/users/signin", signInPost);
 //PostsRouter.post("/posts", postPosts)
 

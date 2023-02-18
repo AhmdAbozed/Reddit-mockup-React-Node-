@@ -1,7 +1,6 @@
 /*
   Cookies are httponly for security but frontend needs to know if they exist for access control
   so similar but empty cookies are sent at the same time
-  May cause trouble later with manually expiring tokens
 */
 import { Request, Response } from 'express'
 import dotenv from 'dotenv'
@@ -36,7 +35,7 @@ class tokenClass {
       secure: false,
       httpOnly: false,
     });
-    if (next) {
+    if (typeof next == "function") {
       //function is either called independently or part of middleware, then it has a next
       console.log("next found inside createaccesstoken")
       next();
@@ -59,41 +58,55 @@ class tokenClass {
     const results = await conn.query(sql, [user.id, token]);
     conn.release();
 
-    console.log("about to send cookies [refresh]")
+
 
     res.cookie('refreshToken', token, options);
-    res.cookie('refreshTokenExists', "", {
+    res.cookie('refreshTokenExists', JSON.stringify({user_id: user.id }), {
       expires: new Date(Date.now() + 7 * 24 * 60 * 1000), // 7 days
       secure: false, //http or https, will change later
       httpOnly: false, //To prevent client-side access to cookies
     })
 
     console.log("sent all cookies [refresh]")
-    this.createAccessToken(req, res);
+    this.createAccessToken(req, res, user);
     return;
   }
 
 
   verifyAccessToken(req: Request, res: Response, next: any) {
+
     console.log("inside verifyaccess")
+
     if(!req.cookies.refreshToken){
       //no refresh token, let refreshfunction handle it
       this.verifyRefreshToken(req, res, next);
     }
-    if (req.cookies.accessToken) {
-      console.log("Accesstoken exists, verifying..")
-      const token: string = req.cookies.accessToken;
-      try {
-        jwt.verify(token, tokenSecret as Secret, (err) => { if (err){throw new Error()}})
 
-        console.log("MADE IT NEXT TO NEXT")
+    if (req.cookies.accessToken) {
+
+      console.log("Accesstoken exists, verifying..")
+      
+      try {
+        const token: string = req.cookies.accessToken;
+        jwt.verify(token, tokenSecret as Secret,function(err, payload){
+          console.log(" access token error: "+JSON.stringify(err))
+          if(err?.message)throw new Error(err.message)
+        })
+        console.log("Access Token verified")
         next()
       }
-      catch (error) {
-        //accesstoken has been tampered with, create new one
-        this.verifyRefreshToken(req, res, next);
+      catch (error: any) {
+        
+        console.log(JSON.stringify(error))
+        if(error.message == "invalid token"){
+          
+          //accesstoken has been tampered with, create new one
+          this.verifyRefreshToken(req, res, next)
+        }
+        else throw new Error("Unidentified server error (Access token)")
       }
     }
+
     else { //no access token, verify that refresh exists to create new access token
       console.log("Accesstoken doesnt exist")
       this.verifyRefreshToken(req, res, next);
@@ -107,6 +120,7 @@ class tokenClass {
 
   async verifyRefreshToken(req: Request, res: Response, next: any) {
     console.log("inside verifyrefresh")
+ 
     const __dirname = path.resolve();
 
     try {
@@ -114,8 +128,11 @@ class tokenClass {
       if (req.cookies.refreshToken) {
         const token: string = req.cookies.refreshToken;
         jwt.verify(token, tokenSecret as Secret, function (err) {
-          if (err) {
+          if (err?.message == "invalid signature") {
             console.log(JSON.stringify(err))
+            res.clearCookie("refreshToken", {secure: false, httpOnly: true})
+            res.clearCookie("refreshTokenExists", {secure: false, httpOnly: false})
+            res.clearCookie("accessToken", {secure: false, httpOnly: true})
             throw new BaseError(403, err.message)
           }
         })
@@ -125,14 +142,18 @@ class tokenClass {
         conn.release();
         console.log("result of refresh query: " + results.rows)
         if (results.rows[0]) {
+
           this.createAccessToken(req, res, next)
         }
         else {//refreshtoken doesnt exist in db
-          throw new BaseError(404, "refresh token not found, redirect to login")
+          //according to express docs, the cookie's options excluding expiration must be included to clear it
+          res.clearCookie("refreshToken", {secure: false, httpOnly: true})
+          res.clearCookie("refreshTokenExists", {secure: false, httpOnly: false})
+          throw new BaseError(404, "refresh token not found in DB, redirect to login")
         }
 
       }
-      else {
+      else {//no token in cookie
         throw new BaseError(401, "refresh token missing/expired.")
       }
     }

@@ -25,7 +25,7 @@ const Sidebar = () => {
             <div className="sidebar-item">
                 <div className="icon" id="avatar-icon"/>
                 {/*<input type="button" className="sidebar-item sidebar-button" id="" value={"Create Community"}/>*/}
-                <a  className="sidebar-item sidebar-anchor" id="" >Create Community</a>
+                <a  className="sidebar-item sidebar-anchor" id="" href="/subreddit/createSubreddit">Create Community</a>
             
             </div>
             {filler_sidebar}
