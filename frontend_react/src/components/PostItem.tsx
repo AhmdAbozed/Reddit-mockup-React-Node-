@@ -13,8 +13,7 @@ const Post_Item = (props:{key: string,Id: string, Title: string, Text: string, V
     const [voteState, setVote] = useState(props.voteStatus);
     const [voteCount, setCount] = useState(()=>{return props.Votes})
     const { loginFormState, toggleLoginForm } = useContext(loginContext);
-    console.log("post id: "+ props.Id + " vote: "+ props.voteStatus)
-    if(voteState == 1) {document.getElementById(props.Id+"upvote")?.classList.replace("hollow", "filled"); }
+     if(voteState == 1) {document.getElementById(props.Id+"upvote")?.classList.replace("hollow", "filled"); }
     else if(voteState == -1) {document.getElementById(props.Id+"downvote")?.classList.replace("hollow", "filled")}
  
 
@@ -84,6 +83,7 @@ const Post_Item = (props:{key: string,Id: string, Title: string, Text: string, V
     }   
     return (
         <div className= "post-item colored" id= {props.Id}>
+            <div className="post-item-overlay" onClick={(e)=>{window.location.href =  id+"/post/"+props.Id; }}/>
             <div  className="inline post-item-sub-icon" />
             <div className="post-item-subreddit">r/{props.Subreddit}</div>
             <div className="post-item-op">{"u/"+props.Op}</div>

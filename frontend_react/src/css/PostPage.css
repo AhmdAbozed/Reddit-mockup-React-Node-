@@ -1,0 +1,102 @@
+#post-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: ghostwhite;
+    background: linear-gradient(rgb(18, 26, 39), rgb(20 30 46) 50%);
+    margin: 0.5rem 1rem 0 0;
+    border: 0.1rem solid #313249;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+#post-img {
+    width: 90%;
+    object-fit: contain;
+}
+
+#comments-list {
+
+    margin: 0.5rem 1rem 0 0;
+
+}
+
+#comment-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#comment-input {
+    height: 6rem;
+    width: 100%;
+    font-size: 1.3rem;
+    padding-left: 0.5rem;
+    padding-top: 1rem;
+    background-color: #1c1c2f;
+    border: 2px solid #323b52;
+    color: #c4c4c4;
+}
+
+#comment-submit {
+    cursor: pointer;
+    height: 2rem;
+    width: 7rem;
+    align-self: end;
+    background-color: rgb(255, 102, 0);
+    color: white;
+    border-radius: 1rem;
+
+    margin-top: 0.2rem;
+}
+
+
+.comment {
+    color: ghostwhite;
+    position: relative;
+    border: 0.1rem solid #434463;
+    margin: 0.5rem 0 0 0;
+    padding-left: 0.3rem;
+    padding-bottom: 0.3rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(rgb(30 35 55), rgb(19 28 42) 50%);
+}
+
+#replyWrapper {
+    padding: 0 1rem;
+    padding-bottom: 0.2rem;
+}
+
+#replyButton {
+    background: none;
+    color: ghostwhite;
+    border: none;
+    cursor: pointer;
+}
+
+#replyInput {
+    box-sizing: border-box;
+    height: 3rem;
+    width: 100%;
+    font-size: 1rem;
+    padding-left: 0.5rem;
+    background-color: #1c1c2f;
+    border: 2px solid #323b52;
+    color: #c4c4c4;
+}
+#replyButtonsWrapper{
+    display: flex;
+}
+.replyInputButton{
+    cursor: pointer;
+    height:1.5rem;
+    width: 5rem;
+    align-self: end;
+    background-color: rgb(255, 102, 0);
+    color: white;
+    border-radius: 1rem;
+    margin-top: 0.2rem;
+}
+#replySubmit {
+    margin-left: auto;
+}

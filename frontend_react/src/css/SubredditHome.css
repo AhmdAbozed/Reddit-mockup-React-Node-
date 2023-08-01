@@ -81,15 +81,11 @@
         "p s";
     
     }
-    #subreddit-sidebar-container{
-        /*position: stickyq*/                                                                                                                                      
-    }
+
     #subreddit-sidebar{
         display: flex;
         flex-direction: column;
         color: ghostwhite;
-        grid-area: s;
-        /* background-color: #ffffff; */
         background: linear-gradient(rgb(18, 26, 39), rgb(20 30 46) 50% );
         height: 20em;
         margin: 0.5rem 1rem 0 0;

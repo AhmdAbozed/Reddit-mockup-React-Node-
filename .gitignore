@@ -1,4 +1,5 @@
 backend_node/node_modules/
+backend_node/uploads/
 frontend_react/node_modules/
 backend_node/env
 frontend_react/env

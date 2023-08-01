@@ -16,7 +16,7 @@
     white-space: nowrap;
     animation-name: slide;
     animation-duration: 0.2s;
-    margin-top: 2.5rem;
+    padding-top: 2.5rem;
 }
 @media (min-width: 550px) {
     @keyframes slide {

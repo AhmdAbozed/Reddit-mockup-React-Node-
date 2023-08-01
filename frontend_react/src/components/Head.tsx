@@ -47,23 +47,23 @@ const Head = (props: {
             } />
         }
     }
-    const signOut = async ()=>{
+    const signOut = async () => {
         const options = {
             method: "GET",
-            headers:{
+            headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Credentials': 'true'
             },
-            credentials:"include",
+            credentials: "include",
         }
         //@ts-ignore
         const res = await fetch("http://" + window.location.hostname + ":3003/users/signout", options);
         console.log(res.status)
-        if(res.status == 200 ){
+        if (res.status == 200) {
             console.log("Signed Out")
             window.location.reload()
         }
-        else{
+        else {
             console.log("Si")
         }
     }
@@ -73,7 +73,7 @@ const Head = (props: {
         }
 
     }
-    
+
     return (
         <div id="head-parent">
             <header id="head">
@@ -86,6 +86,8 @@ const Head = (props: {
                 {renderPostCreation()}
                 <input type="button" className="head-item head-button" id="sidebar-button" onClick={
                     () => {
+
+                        document.getElementsByTagName("body")[0].removeAttribute("style")
                         console.log("clicked: " + props.toggleSidebar); props.toggleSidebar(!props.sidebarState)
                     }
                 } />

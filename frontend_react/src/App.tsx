@@ -10,7 +10,7 @@ import { createContext } from 'react';
 export const loginContext = createContext<any>({
   loginFormState: false,
 
-  toggleLoginForm: ()=>{}
+  toggleLoginForm: () => { }
 })
 
 const App = ({ loginOn = false }) => {
@@ -19,13 +19,15 @@ const App = ({ loginOn = false }) => {
   const [subredditState, setSubredditState] = useState(-1)
   const renderSidebar = () => {
     if (sidebarState) {
+      //at head component sidebar button reverses this
+      document.getElementsByTagName("body")[0].setAttribute("style", "overflow-y: hidden")
       return <Sidebar />;
     }
     else return;
   }
   const renderLoginForm = () => {
     if (loginFormState) {
-      if(document.cookie.includes("refreshTokenExists"))return
+      if (document.cookie.includes("refreshTokenExists")) return
       return <LogInForm toggleLoginForm={toggleLoginForm} loginFormState={loginFormState} />;
     }
     else return;
@@ -38,11 +40,11 @@ const App = ({ loginOn = false }) => {
       <Head toggleSidebar={toggleSidebar} toggleLoginForm={toggleLoginForm} sidebarState={sidebarState} subredditId={subredditState} />
       {renderSidebar()}
       {renderLoginForm()}
-      <loginContext.Provider value={{loginFormState, toggleLoginForm}}>
+      <loginContext.Provider value={{ loginFormState, toggleLoginForm }}>
         <div>
           <Outlet context={[subredditState, setSubredditState]} />
         </div>
-        </loginContext.Provider>
+      </loginContext.Provider>
     </div>
   )
 }

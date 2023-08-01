@@ -6,6 +6,7 @@ import CreatePost from './components/CreatePost';
 import CreateSubreddit from './components/CreateSubreddit';
 import PostsList from './components/PostsList';
 import SubredditsList from './components/SubredditsList';
+import PostPage from './components/PostPage';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import {AccessControl} from './util/AccessControl';
@@ -24,6 +25,10 @@ const appChildren: Array<object> = [
   {
     path: "subreddit/",
     element: <Navigate replace to="/" />
+  },
+  {
+    path: "subreddit/:id/post/:post_id",
+    element: <PostPage/>
   }
 ] 
 const router = createBrowserRouter([

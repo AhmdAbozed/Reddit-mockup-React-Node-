@@ -8,7 +8,8 @@ import usersRouter from './controllers/users.js'
 import SubredditMembersRouter from './controllers/subreddit_members.js'
 import cookieParser from 'cookie-parser'
 import { BaseError, sendError } from './util/errorHandler.js'
-
+import blazeApi from './util/backblaze.js'
+import commentsRouter from './controllers/comments.js'
 dotenv.config()
 
 const port = process.env.backendPort 
@@ -19,8 +20,8 @@ const corsOptions = {
     optionsSuccessStatus: 200
 }
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true, limit:"10mb" }));
+app.use(bodyParser.json({limit:"10mb"}));
 
 app.use(cors({
     "allowedHeaders": [
@@ -47,6 +48,9 @@ app.use('/', PostsRouter)
 app.use('/', SubredditsRouter)
 app.use('/', usersRouter)
 app.use('/',SubredditMembersRouter)
+app.use('/', commentsRouter)
 app.use(sendError)
+
+
 
 export {app}

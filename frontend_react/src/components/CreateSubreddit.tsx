@@ -24,7 +24,9 @@ const CreateSubreddit = () => {
     }
 
     const submitPost = async (event: React.FormEvent<HTMLFormElement>) => {
-       
+        if (!document.cookie.includes("refreshTokenExists")) {
+            window.location.href = "/login";
+        }
         console.log("createpost url is: " + window.location.href)
         event.preventDefault();
         const target = event.target as any
