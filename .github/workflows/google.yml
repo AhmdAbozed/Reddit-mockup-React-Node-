@@ -23,7 +23,7 @@ jobs:
       uses: 'google-github-actions/setup-gcloud@v1'
       with:
         version: '>= 363.0.0'
-
+    - uses: actions/checkout@v3
     - name: 'Use gcloud CLI to deploy to app engine'
       working-directory: backend_node
       run: 'gcloud app deploy'
