@@ -2,17 +2,40 @@
   Cookies are httponly for security but frontend needs to know if they exist for access control
   so similar but empty cookies are sent at the same time
 */
+
+/*
+  Access tokens are stateless but expire after a short time ex: 5 mins
+  To create new access token every 5 mins, you need refresh token.
+  Refresh tokens are stateful and are stored in DB. They expire after a long time ex: 7 days. They're created on login 
+  This combines the efficency of stateless tokens with the security of stateful tokens 
+
+  The auth flow: 
+    verify Access Token
+      exists: auth
+      else:
+        verify Refresh Token as well as the DB
+          exists: create new access token then auth
+          else: 
+            remove token cookies then 403
+  
+  after logging in flow:
+    create refresh token and store it in DB
+    create access token
+    add both to cookies
+    complete login
+  */
+
+
 import { Request, Response } from 'express'
 import dotenv from 'dotenv'
 import jwt, { Secret } from 'jsonwebtoken'
-import path from "path"
 import client from '../database.js'
 import { user } from '../models/users.js'
 import { BaseError, sendError } from './errorHandler.js'
 
 dotenv.config()
 
-const { tokenSecret, adminTokenSecret } = process.env;
+const { tokenSecret } = process.env;
 class tokenClass {
 
   createAccessToken(req: Request, res: Response, next?: any) {
@@ -25,11 +48,11 @@ class tokenClass {
     }
 
 
-    const token = jwt.sign({ data: "ayy" }, tokenSecret as string)
+    const token = jwt.sign({ data: "inside access" }, tokenSecret as string)
 
     res.cookie('accessToken', token, options);
 
-    //empty cookie to tell the frontend the httponly cookies exist 
+    //empty cookie to tell the frontend the httponly cookies exist, to determine if user is logged in
     res.cookie('accessTokenExists', "", {
       expires: new Date(Date.now() + 10 * 60 * 1000),
       secure: false,
@@ -61,13 +84,13 @@ class tokenClass {
 
 
     res.cookie('refreshToken', token, options);
-    res.cookie('refreshTokenExists', JSON.stringify({user_id: user.id }), {
+    res.cookie('refreshTokenExists', JSON.stringify({ user_id: user.id }), {
       expires: new Date(Date.now() + 7 * 24 * 60 * 1000), // 7 days
       secure: false, //http or https, will change later
       httpOnly: false, //To prevent client-side access to cookies
     })
 
-    console.log("sent all cookies [refresh]")
+    console.log("set refresh token cookies")
     this.createAccessToken(req, res, user);
     return;
   }
@@ -77,38 +100,34 @@ class tokenClass {
 
     console.log("inside verifyaccess")
 
-    if(!req.cookies.refreshToken){
-      //no refresh token, let refreshfunction handle it
+    if (!req.cookies.refreshToken) {
+      //no refresh token, let verifyrefresh handle it
       this.verifyRefreshToken(req, res, next);
     }
 
     if (req.cookies.accessToken) {
 
       console.log("Accesstoken exists, verifying..")
-      
+
       try {
         const token: string = req.cookies.accessToken;
-        jwt.verify(token, tokenSecret as Secret,function(err, payload){
-          console.log(" access token error: "+JSON.stringify(err))
-          if(err?.message)throw new Error(err.message)
+        jwt.verify(token, tokenSecret as Secret, function (err, payload) {
+          console.log(" access token error: " + JSON.stringify(err))
+          if (err?.message) throw new Error(err.message)
         })
         console.log("Access Token verified")
         next()
       }
       catch (error: any) {
-        
+
         console.log(JSON.stringify(error))
-        if(error.message == "invalid token"){
-          
-          //accesstoken has been tampered with, create new one
-          this.verifyRefreshToken(req, res, next)
-        }
-        else throw new Error("Unidentified server error (Access token)")
+        //Error with access token, verify refresh token to create new access token
+        this.verifyRefreshToken(req, res, next)
       }
     }
 
     else { //no access token, verify that refresh exists to create new access token
-      console.log("Accesstoken doesnt exist")
+      console.log("Accesstoken doesn't exist")
       this.verifyRefreshToken(req, res, next);
     }
 
@@ -120,8 +139,6 @@ class tokenClass {
 
   async verifyRefreshToken(req: Request, res: Response, next: any) {
     console.log("inside verifyrefresh")
- 
-    const __dirname = path.resolve();
 
     try {
 
@@ -130,9 +147,9 @@ class tokenClass {
         jwt.verify(token, tokenSecret as Secret, function (err) {
           if (err?.message == "invalid signature") {
             console.log(JSON.stringify(err))
-            res.clearCookie("refreshToken", {secure: false, httpOnly: true})
-            res.clearCookie("refreshTokenExists", {secure: false, httpOnly: false})
-            res.clearCookie("accessToken", {secure: false, httpOnly: true})
+            res.clearCookie("refreshToken", { secure: false, httpOnly: true })
+            res.clearCookie("refreshTokenExists", { secure: false, httpOnly: false })
+            res.clearCookie("accessToken", { secure: false, httpOnly: true })
             throw new BaseError(403, err.message)
           }
         })
@@ -147,8 +164,8 @@ class tokenClass {
         }
         else {//refreshtoken doesnt exist in db
           //according to express docs, the cookie's options excluding expiration must be included to clear it
-          res.clearCookie("refreshToken", {secure: false, httpOnly: true})
-          res.clearCookie("refreshTokenExists", {secure: false, httpOnly: false})
+          res.clearCookie("refreshToken", { secure: false, httpOnly: true })
+          res.clearCookie("refreshTokenExists", { secure: false, httpOnly: false })
           throw new BaseError(404, "refresh token not found in DB, redirect to login")
         }
 

@@ -4,19 +4,12 @@ import dotenv from 'dotenv'
 import Router from 'express'
 import { tokenClass } from '../util/tokenauth.js';
 import { BaseError } from '../util/errorHandler.js';
-import multer from 'multer'
-import blazeApi from '../util/backblaze.js';
+
 dotenv.config()
-
-const { adminTokenSecret, blazeKeyId, blazeKey, HOST_PORT_URL } = process.env
-
-const upload = multer({ dest: 'uploads/' })
-
-const commentsRouter = Router();
 
 const tokenFuncs = new tokenClass()
 
-let psuedoComment: comment = { user_id: -1,  text: "NULL", votes: 0, post_id: -1, parent_id: null }
+let psuedoComment: comment = { user_id: -1, text: "NULL", votes: 0, post_id: -1, parent_id: null }
 
 const store = new commentsStore();
 
@@ -35,7 +28,7 @@ const getComments = async function (req: Request, res: Response, next: any) {
 
 const postComment = async function (req: Request, res: Response, next: any) {
 
-    //console.log("comment controller: the Text " + req.body.Text);
+    //Id of comment owner is included in the refresh token
     let payloadUserId;
     try {
         const payload = JSON.parse(Buffer.from(req.cookies.refreshToken.split('.')[1], 'base64').toString())
@@ -45,15 +38,13 @@ const postComment = async function (req: Request, res: Response, next: any) {
         next(new BaseError(403, "Invalid refresh token"))
         return;
     }
-    console.log("comment post req body: "+JSON.stringify(req.body))
-    console.log("comment post parent id"+req.body.parent_id)
-    
+
     psuedoComment.text = req.body.Text;
     psuedoComment.parent_id = req.body.parent_id
     psuedoComment.post_id = Number(req.params.post_id);
     psuedoComment.user_id = payloadUserId;
     const result = await store.postComment(psuedoComment);
-    console.log("posting post result: " + JSON.stringify(result))
+    console.log("posting comment result: " + JSON.stringify(result))
 
     try {
         if (result && result.id) {
@@ -68,7 +59,9 @@ const postComment = async function (req: Request, res: Response, next: any) {
 
 const vote = async (req: Request, res: Response, next: any) => {
     try {
-        if (!(Number(req.params.post_id) && Number(req.query.user_id)&& Number(req.query.comment_id) && Number.isInteger(Number(req.query.vote)) && Number.isInteger(Number(req.query.comment_id)))) {
+        
+        //Number() can return 0 which counts as false, isInteger(0) returns true, ids can't be 0s
+        if (!(Number(req.params.post_id) && Number(req.query.user_id) && Number(req.query.comment_id) && Number.isInteger(Number(req.query.vote)) && Number.isInteger(Number(req.query.comment_id)))) {
             throw new BaseError(400, "Failed to vote comment, invalid/missing url parameters")
         }
         if (Number(req.query.vote) == 0) {
@@ -99,6 +92,7 @@ const getVotes = async (req: Request, res: Response, next: any) => {
     }
 }
 
+const commentsRouter = Router();
 commentsRouter.get("/subreddits/:id/posts/:post_id/comments/votes", getVotes)
 commentsRouter.post("/subreddits/:id/posts/:post_id/comments/vote", vote)
 commentsRouter.get("/subreddits/:id/posts/:post_id/comments", getComments);

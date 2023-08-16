@@ -5,7 +5,7 @@ import "../css/SubredditHome.css"
 import { loginContext } from "../App";
 import { useContext } from "react";
 import cookieUtils from "../util/AccessControl";
-import { verifyMember, getSubreddit } from "../util/utilFuncs"
+import { verifyMember, getSubreddit, protocol } from "../util/utilFuncs"
 import SubredditSidebar from "./SubredditSidebar";
 const cookieFuncs = new cookieUtils();
 export type subreddit = {
@@ -22,7 +22,7 @@ const PostsList = () => {
 
     id?: number;
     op_id: number;
-    op: string;
+    username: string;
     title: string;
     text: string;
     img: string;
@@ -64,7 +64,7 @@ const PostsList = () => {
 
 
       console.log("sub title in renderposts: " + subredditState.title)
-      const postElements = posts.map((post: post) => (<PostItem key={JSON.stringify(post.id)} Id={JSON.stringify(post.id)} Op_id={post.op_id} Op={post.op} Title={post.title} Text={post.text} Votes={Number(post.votes)} Subreddit={subTitle as string} voteStatus={post.voteStatus} />))
+      const postElements = posts.map((post: post) => (<PostItem key={JSON.stringify(post.id)} Id={JSON.stringify(post.id)} Op_id={post.op_id} Op={post.username} Title={post.title} Text={post.text} Votes={Number(post.votes)} Subreddit={subTitle as string} voteStatus={post.voteStatus} />))
       setPostElements(postElements)
     }
 
@@ -77,7 +77,7 @@ const PostsList = () => {
           'Content-Type': 'application/json'
         }
       }
-      const resp = await fetch("http://" + window.location.hostname + ":" + 3003 + "/subreddits/" + id + "/posts", options);
+      const resp = await fetch(protocol+"://" + window.location.hostname + ":" + 3003 + "/subreddits/" + id + "/posts", options);
       const data = await resp.json()
 
       console.log(data);
@@ -91,7 +91,7 @@ const PostsList = () => {
           'Content-Type': 'application/json'
         }
       }
-      const resp = await fetch("http://" + window.location.hostname + ":" + 3003 + "/subreddits/" + id + "/posts/votes?user_id=" + user_id, options);
+      const resp = await fetch(protocol+"://" + window.location.hostname + ":" + 3003 + "/subreddits/" + id + "/posts/votes?user_id=" + user_id, options);
       const data = await resp.json()
 
       console.log("user votes: " + JSON.stringify(data));
@@ -140,14 +140,14 @@ const PostsList = () => {
       }
     }
     const user_id = decodeURIComponent(document.cookie)[decodeURIComponent(document.cookie).lastIndexOf("user_id") + 9]
-    const resp = await fetch("http://" + window.location.hostname + ":" + 3003 + "/members?subreddit_id=" + id + "&member_id=" + user_id, options);
+    const resp = await fetch(protocol+"://" + window.location.hostname + ":" + 3003 + "/members?subreddit_id=" + id + "&member_id=" + user_id, options);
     const data = await resp.json()
     if (resp.status == 200) {
 
       console.log("member added, 200")
       window.location.reload()
     }
-    //const resp = await fetch("http://" + window.location.hostname + ":" + 3003 + "/members?"+ new URLSearchParams({member_id: }), options);
+    //const resp = await fetch(protocol+"://" + window.location.hostname + ":" + 3003 + "/members?"+ new URLSearchParams({member_id: }), options);
     //const data = await resp.json()
   }
 

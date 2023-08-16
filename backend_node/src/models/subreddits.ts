@@ -38,7 +38,7 @@ export class subredditsStore {
 
     }
 
-    async read(id: number): Promise<subreddit> {//???
+    async read(id: number): Promise<subreddit> {
 
         const conn = await client.connect();
         const sql = 'SELECT * FROM subreddits WHERE id=($1)';

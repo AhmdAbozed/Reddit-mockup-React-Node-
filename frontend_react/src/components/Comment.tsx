@@ -4,12 +4,12 @@ import { comment } from "./PostPage";
 import "../css/CreateForm.css";
 import { submitComment } from "../util/utilFuncs";
 import { loginContext } from "../App";
-
-const Comment = (props: { ID: number, parent_id: number | null, text: string, commentsData: Array<comment>, voteStatus: number, votes: number }) => {
+import { protocol } from "../util/utilFuncs";
+const Comment = (props: { ID: number, parent_id: number | null, text: string, commentsData: Array<comment>, voteStatus: number, votes: number, username: string }) => {
     const [buttonState, setButtonState] = useState([0, 0]);
     const [replyVisibilityState, setReplyVisibility] = useState(true)
     const [repliesState, setRepliesState] = useState<Array<ReactElement>>()
-    const [voteCount, setCount] = useState(props.votes)
+    const [voteCount, setCount] = useState(props.votes || 0)
 
     const [voteState, setVote] = useState(props.voteStatus);
     console.log("votestate " + voteState)
@@ -28,7 +28,7 @@ const Comment = (props: { ID: number, parent_id: number | null, text: string, co
                 replies.push(reply);
         })
         const replyElements = replies.map((reply: comment) => {
-            return <Comment key={JSON.stringify(reply.id)} ID={reply.id} parent_id={reply.parent_id} text={reply.text} commentsData={props.commentsData} voteStatus={reply.voteStatus} votes={reply.votes} />
+            return <Comment key={JSON.stringify(reply.id)} ID={reply.id} parent_id={reply.parent_id} text={reply.text} commentsData={props.commentsData} voteStatus={reply.voteStatus} votes={reply.votes} username={reply.username} />
         })
         setRepliesState(replyElements)
     }, [])
@@ -49,14 +49,12 @@ const Comment = (props: { ID: number, parent_id: number | null, text: string, co
         }
         const user_id = decodeURIComponent(document.cookie)[decodeURIComponent(document.cookie).lastIndexOf("user_id") + 9]
         console.log("props.ID: " + props.ID)
-        const resp = await fetch("http://" + window.location.hostname + ":" + 3003 + "/subreddits/" + id + "/posts/" + post_id + "/comments/vote?user_id=" + user_id + "&vote=" + vote + "&comment_id=" + props.ID, options);
+        const resp = await fetch(protocol+"://" + window.location.hostname + ":" + 3003 + "/subreddits/" + id + "/posts/" + post_id + "/comments/vote?user_id=" + user_id + "&vote=" + vote + "&comment_id=" + props.ID, options);
         const data = await resp.json()
         if (resp.status == 200) {
 
             console.log("Voted, 200")
         }
-        //const resp = await fetch("http://" + window.location.hostname + ":" + 3003 + "/members?"+ new URLSearchParams({member_id: }), options);
-        //const data = await resp.json()
     }
 
     function voteChange(event: React.MouseEvent<HTMLElement>) {
@@ -96,9 +94,9 @@ const Comment = (props: { ID: number, parent_id: number | null, text: string, co
     return (
 
         <div className={"comment p" + props.parent_id} id={`${props.ID}`}>
-            <div className="inline post-item-sub-icon" />
+            <div className="inline post-item-user-icon" />
 
-            <div className="post-item-op">{"u/"}</div>
+            <div className="post-item-op">{"u/"+props.username}</div>
 
             <div className="post-item-title">{props.text}</div>
 

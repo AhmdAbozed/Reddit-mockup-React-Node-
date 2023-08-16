@@ -4,8 +4,6 @@ To upload or download from BB:
     1. get unique BB api url, using BB account key and keyID
     2. send request to the unique BB api url to get upload/download URL
     3. send request to the upload/download URL, with the approperiate headers.
-
-The upload/download requests are done at products.ts file
 */
 import dotenv from 'dotenv'
 import fs from "fs"
@@ -62,7 +60,7 @@ class blazeApi {
             getBlaze.on('error', (err) => {
                 reject(err);
             });
-            getBlaze.write(JSON.stringify({ bucketId: "5e6b2b10be5cffb88f260a18" }))
+            getBlaze.write(JSON.stringify({ bucketId: "de0b8bd07eccef988f960a18" }))
             getBlaze.end()
 
         })

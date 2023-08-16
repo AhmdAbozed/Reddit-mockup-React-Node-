@@ -1,27 +1,23 @@
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import dotenv from 'dotenv'
 import PostsRouter from './controllers/posts.js'
 import SubredditsRouter from './controllers/subreddits.js'
 import usersRouter from './controllers/users.js'
 import SubredditMembersRouter from './controllers/subreddit_members.js'
 import cookieParser from 'cookie-parser'
-import { BaseError, sendError } from './util/errorHandler.js'
-import blazeApi from './util/backblaze.js'
+import { sendError } from './util/errorHandler.js'
 import commentsRouter from './controllers/comments.js'
-dotenv.config()
 
-const port = process.env.backendPort 
+//GC App Engine env variable
+const port = parseInt(process.env.backendPort!) || 8080;
 const app = express()
-const address: string = "http://localhost:3003"
-
 const corsOptions = {
     optionsSuccessStatus: 200
 }
 
-app.use(bodyParser.urlencoded({ extended: true, limit:"10mb" }));
-app.use(bodyParser.json({limit:"10mb"}));
+app.use(bodyParser.urlencoded({ extended: true, limit:"30mb" }));
+app.use(bodyParser.json({limit:"30mb"}));
 
 app.use(cors({
     "allowedHeaders": [
@@ -34,16 +30,19 @@ app.use(cors({
     ],
     "methods": 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
     "preflightContinue": false,
-    "origin": 'http://localhost:3000',
     "credentials": true //necessary for cookies
 }));
 
+
+app.get('/', (req, res) => {
+    res.send('Server Up and Running');
+});
+app.listen(port, () => {
+    console.log(`Server listening on port ${port}...`);
+});
+
+
 app.use(cookieParser())
-
-app.listen(port, function () {
-    console.log(`starting app on: ${address}`)
-})
-
 app.use('/', PostsRouter)
 app.use('/', SubredditsRouter)
 app.use('/', usersRouter)
@@ -51,6 +50,4 @@ app.use('/',SubredditMembersRouter)
 app.use('/', commentsRouter)
 app.use(sendError)
 
-
-
-export {app}
+export { app }

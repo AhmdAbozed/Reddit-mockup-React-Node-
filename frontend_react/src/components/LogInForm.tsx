@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom"
 import React, { useState, useEffect } from "react";
 import "./../css/LogInForm.css"
+import { protocol } from "../util/utilFuncs";
 const SignInForm = (props: {
     toggleLoginForm: React.Dispatch<React.SetStateAction<boolean>>;
     loginFormState: boolean;
@@ -41,7 +42,7 @@ const SignInForm = (props: {
                 body: JSON.stringify(submission)
             }
             //@ts-ignore
-            const res = await fetch("http://" + window.location.hostname + ":3003/"+endpoint, options);
+            const res = await fetch(protocol+"://"+ window.location.hostname + ":3003/"+endpoint, options);
             console.log(res.status)
 
             const resJSON = await res.json()

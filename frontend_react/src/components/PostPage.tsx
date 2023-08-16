@@ -4,16 +4,18 @@ import "../css/PostPage.css"
 import { loginContext } from "../App";
 import { useContext } from "react";
 import cookieUtils from "../util/AccessControl";
-import { verifyMember, getSubreddit, submitComment } from "../util/utilFuncs"
+import {protocol, verifyMember, getSubreddit, submitComment } from "../util/utilFuncs"
 import SubredditSidebar from "./SubredditSidebar";
 import { subreddit } from "./PostsList";
 import Comment from "./Comment";
+
 const cookieFuncs = new cookieUtils();
 export type comment = {
   id: number
   parent_id: number | null
   text: string
   user_id: number
+  username: string
   votes: number
   voteStatus: number
 }
@@ -57,7 +59,7 @@ const PostPage = () => {
           'Content-Type': 'application/json'
         }
       }
-      const resp = await fetch("http://" + window.location.hostname + ":" + 3003 + "/subreddits/" + id + "/posts/" + post_id + "/comments/votes?user_id=" + user_id, options);
+      const resp = await fetch(protocol+"://"+ window.location.hostname + ":" + 3003 + "/subreddits/" + id + "/posts/" + post_id + "/comments/votes?user_id=" + user_id, options);
       const data = await resp.json()
 
       console.log("user votes: " + JSON.stringify(data));
@@ -71,9 +73,10 @@ const PostPage = () => {
           'Content-Type': 'application/json'
         }
       }
-      const resp = await fetch("http://" + window.location.hostname + ":3003/subreddits/" + id + "/posts/" + post_id + "/comments", options);
+      const resp = await fetch(protocol+"://" + window.location.hostname + ":3003/subreddits/" + id + "/posts/" + post_id + "/comments", options);
       const data = await resp.json()
       if (resp.status == 200) {
+        console.log(JSON.stringify(data[0]))
         return data
       }
     }
@@ -93,7 +96,7 @@ const PostPage = () => {
         }
 
         const commentElements = comments.map((comment: comment) => {
-          if (!comment.parent_id) return (<Comment key={JSON.stringify(comment.id)} ID={comment.id} parent_id={comment.parent_id} text={comment.text} commentsData={comments} voteStatus={comment.voteStatus} votes={comment.votes} />)
+          if (!comment.parent_id) return (<Comment key={JSON.stringify(comment.id)} ID={comment.id} parent_id={comment.parent_id} text={comment.text} commentsData={comments} voteStatus={comment.voteStatus} votes={comment.votes} username={comment.username}/>)
         })
         setComments(commentElements)
       }
@@ -117,7 +120,7 @@ const PostPage = () => {
 
         <div id="posts-list">
           <div id="post-container">
-            <img id="post-img" src={"https://f004.backblazeb2.com/file/abozedbucket/"+post_id+".png"} />
+            <img id="post-img" src={"https://f004.backblazeb2.com/file/redditBucket/"+post_id+".png"} />
             <form action="/sub" method="post" id="comment-form" onSubmit={async (e) => {
               e.preventDefault()
               if (!document.cookie.includes("refreshTokenExists")) {

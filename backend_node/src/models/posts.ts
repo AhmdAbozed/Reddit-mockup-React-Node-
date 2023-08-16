@@ -54,7 +54,7 @@ export class postsStore {
     */
     async subredditPosts(subredditID: number): Promise<post[]> {
         const conn = await client.connect();
-        const sql = 'SELECT * FROM posts WHERE subreddit_id=($1)';
+        const sql = 'SELECT posts.id, posts.op, posts.title, posts.votes, posts.subreddit_id, users.username FROM posts JOIN users ON posts.subreddit_id=($1) AND users.id=posts.op';
         const results = await conn.query(sql, [subredditID]);
         conn.release();
         return results.rows;

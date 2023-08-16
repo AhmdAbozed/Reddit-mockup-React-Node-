@@ -1,7 +1,5 @@
 import client from '../database.js'
 import bcrypt from 'bcrypt'
-import { IsEmailOptions } from 'express-validator/src/options.js';
-import { QueryResult } from 'pg';
 import dotenv from 'dotenv'
 
 dotenv.config()
@@ -28,7 +26,7 @@ export class usersStore {
             const sql = 'SELECT * FROM users';
             const results = await conn.query(sql);
             conn.release();
-            //@ts-ignore
+            
             return results.rows;
         }
         catch (err) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../css/CreateForm.css";
-
+import { protocol } from "../util/utilFuncs";
 const CreatePost = () => {
 
     let { id } = useParams();
@@ -46,7 +46,7 @@ const CreatePost = () => {
             body: postFormData
         }
         //@ts-ignore
-        const resp = await fetch("http://" + window.location.hostname + ":3003/subreddits/" + id + "/posts", options);
+        const resp = await fetch(protocol+"://" + window.location.hostname + ":3003/subreddits/" + id + "/posts", options);
         console.log("about to resp.json")
         if (resp.status == 200) {
             console.log("Created post successfully. 200")
@@ -91,7 +91,7 @@ const CreatePost = () => {
                                 console.log(file!.type)
                                 const imgUrl = URL.createObjectURL(file!);
                                 console.log("img Url: " + imgUrl)
-                                document.getElementById("post-img")?.setAttribute("src", imgUrl);
+                                document.getElementById("post-creation-img")?.setAttribute("src", imgUrl);
                             } else console.log("invalid file type")
                         });
                     } else {
@@ -108,7 +108,7 @@ const CreatePost = () => {
                         ev.preventDefault();
                     }}
                 >
-                    <img src="" alt="" id="post-img" />
+                    <img src="" alt="" id="post-creation-img" />
                 </div>
 
                 <div id="inputs-container">
@@ -120,7 +120,7 @@ const CreatePost = () => {
                             if (imgfile![0]) {
                                 const imgUrl = URL.createObjectURL(imgfile![0]);
                                 console.log("img Url: " + imgUrl)
-                                document.getElementById("post-img")?.setAttribute("src", imgUrl);
+                                document.getElementById("post-creation-img")?.setAttribute("src", imgUrl);
                                 //URL.revokeObjectURL(imgUrl)
                             }
                         }}>

@@ -25,6 +25,7 @@
     animation-name: transparency;
     animation-duration:0.5s;
     animation-fill-mode: forwards;
+    transform: translateY(-2.5rem);
 }
 
 .user-form{

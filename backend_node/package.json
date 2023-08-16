@@ -1,12 +1,16 @@
 {
   "type": "module",
   "scripts": {
+    "prepare": "npm run gcp-build",
+    "pretest": "npm run gcp-build",
     "build": "tsc",
-    "start": " npx ts-node src/server.ts",
+    "gcp-build": "tsc",
+    "ts-node": " npx ts-node src/server.ts",
+    "start": "tsc && node dist/server.js",
     "startTestEnv": "cross-env ENV=test npm run start",
     "DB": "db-migrate --env placeholder db:create store_front_db",
-    "testDB": "db-migrate db:create reddit_test_db",
-    "dropTestDB": "db-migrate db:drop reddit_test_db",
+    "testDB": "db-migrate --env placeholder db:create reddit_db",
+    "dropTestDB": "db-migrate db:drop reddit_db",
     "migrateUp": "db-migrate --env dev up",
     "migrateDown": "db-migrate --env dev down",
     "migrateUpTest": "cross-env ENV=test db-migrate up",
@@ -28,7 +32,8 @@
     "multer": "^1.4.5-lts.1",
     "npm-check-updates": "^16.0.1",
     "pg": "^8.7.3",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "express-validator": "^6.14.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -38,7 +43,7 @@
     "@types/jsonwebtoken": "^9.0.2",
     "@types/multer": "^1.4.7",
     "@types/pg": "^8.6.5",
-    "express-validator": "^6.14.2",
+
     "ts-node": "^10.9.1"
   }
 }

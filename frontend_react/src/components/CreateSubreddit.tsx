@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../css/CreateForm.css";
-
+import { protocol } from "../util/utilFuncs";
 const CreateSubreddit = () => {
 
     const [buttonState, setButtonState] = useState([0, 0]);
@@ -42,7 +42,7 @@ const CreateSubreddit = () => {
             body: JSON.stringify(submission)
         }
         //@ts-ignore, following error is fixed by adding object directly, rather than through a variable. 
-        const resp = await fetch("http://" + window.location.hostname + ":3003/subreddits/", options);
+        const resp = await fetch(protocol+"://" + window.location.hostname + ":3003/subreddits/", options);
 
         if (resp.status == 200) {
             console.log("Created post successfully. 200")

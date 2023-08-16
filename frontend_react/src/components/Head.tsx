@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import React, { useState } from "react"
 import cookieUtils from "../util/AccessControl";
 import "./../css/Head.css"
-
+import { protocol } from "../util/utilFuncs";
 const cookieFuncs = new cookieUtils();
 
 export const verifyLogin = (e: any, toggleLogin: any) => {
@@ -57,7 +57,7 @@ const Head = (props: {
             credentials: "include",
         }
         //@ts-ignore
-        const res = await fetch("http://" + window.location.hostname + ":3003/users/signout", options);
+        const res = await fetch(protocol+"://" + window.location.hostname + ":3003/users/signout", options);
         console.log(res.status)
         if (res.status == 200) {
             console.log("Signed Out")

@@ -11,10 +11,6 @@ const SubredditsRouter = Router();
 
 dotenv.config()
 
-//let psuedoPost: post = {op: "NULL", title: "NULL", text: "NULL", img: "NULL", votes: 0}
-
-const { adminTokenSecret, blazeKeyId, blazeKey, HOST_PORT_URL } = process.env
-
 const store = new subredditsStore();
 
 const index = async function (req: Request, res: Response) {
@@ -38,9 +34,8 @@ const getSubreddit = async function (req: Request, res: Response, next: any) {
     catch(err){
         next(err)
     }
-
-
 }
+
 const postSubreddit = async function (req: Request, res: Response, next: any) {
     try {
         const payload = JSON.parse(Buffer.from(req.cookies.refreshToken.split('.')[1], 'base64').toString())

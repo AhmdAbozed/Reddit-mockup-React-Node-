@@ -3,15 +3,11 @@ import { Router } from "express"
 import { Request, Response } from 'express'
 import { usersStore, user } from '../models/users.js';
 import dotenv from 'dotenv'
-//import {verifyAuthToken, redirectToHome, createToken} from "../util/tokenauth.js"
 import { tokenClass } from '../util/tokenauth.js';
 import { BaseError } from '../util/errorHandler.js';
 
 dotenv.config()
 
-const { tokenSecret, adminTokenSecret, adminUsername, adminPassword, HOST_PORT_URL } = process.env
-
-//const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 const store = new usersStore();
 const token = new tokenClass();
@@ -127,6 +123,5 @@ const UsersRouter = Router()
 UsersRouter.post("/users/signup", signUpPost);
 UsersRouter.get("/users/signout", signOut);
 UsersRouter.post("/users/signin", signInPost);
-//PostsRouter.post("/posts", postPosts)
 
 export default UsersRouter;

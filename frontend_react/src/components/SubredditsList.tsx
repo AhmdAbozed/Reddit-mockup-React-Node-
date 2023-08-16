@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactElement } from "react";
 import SubredditItem from "./SubredditItem";
-
+import { protocol } from "../util/utilFuncs";
 const SubredditsList = () => {
   type subreddit = {
 
@@ -25,7 +25,7 @@ const SubredditsList = () => {
           'Content-Type': 'application/json'
         }
       }
-      const resp = await fetch("http://" + window.location.hostname + ":" + 3003 + "/subreddits", options);
+      const resp = await fetch(protocol+"://" + window.location.hostname + ":" + 3003 + "/subreddits", options);
       const data = await resp.json()
 
       console.log(data)

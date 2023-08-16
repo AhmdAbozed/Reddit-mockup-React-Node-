@@ -13,7 +13,7 @@ const SubredditSidebar = (props:{subData: subreddit, memberStatus: boolean, user
 
     return (
         <div id="subreddit-sidebar">
-            <div className="subreddit-sidebar-item" id="subreddit-sidebar-title">Welcome to {props.subData.title}</div>
+            <div className="subreddit-sidebar-item" id="subreddit-sidebar-title">Welcome to <b>r/</b>{props.subData.title}</div>
             <hr className="subreddit-sidebar-hr" />
             <div className="subreddit-sidebar-item">Created: {new Date(props.subData.creation_date).toLocaleDateString()}</div>
             <div className="subreddit-sidebar-item">Members: {props.subData.members}</div>

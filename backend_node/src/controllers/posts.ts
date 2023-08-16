@@ -8,8 +8,6 @@ import multer from 'multer'
 import blazeApi from '../util/backblaze.js';
 dotenv.config()
 
-const { adminTokenSecret, blazeKeyId, blazeKey, HOST_PORT_URL } = process.env
-
 const upload = multer({ dest: 'uploads/' })
 
 const PostsRouter = Router();
@@ -37,6 +35,8 @@ const postPosts = async function (req: Request, res: Response, next: any) {
 
     console.log("post controller: the Desc " + req.body.Text);
     console.log("post controller: the Title " + req.body.Title);
+    
+    //Id of post Owner is included in the refresh token
     let payloadOpId;
     try {
         const payload = JSON.parse(Buffer.from(req.cookies.refreshToken.split('.')[1], 'base64').toString())
@@ -46,7 +46,6 @@ const postPosts = async function (req: Request, res: Response, next: any) {
         next(new BaseError(403, "Invalid refresh token"))
         return;
     }
-    console.log(req.body)
     
     psuedoPost.text = req.body.Text;
     psuedoPost.title = req.body.Title;
@@ -55,15 +54,15 @@ const postPosts = async function (req: Request, res: Response, next: any) {
     const result = await store.create(psuedoPost);
     console.log("posting post result: " + JSON.stringify(result))
 
+    //Uploading the Img to backblaze if it exists
     try {
         console.log(req.file)
         if (result && result.id && req.file) {
             const blaze = new blazeApi()
             const imgUpload = await blaze.uploadImg(req.file!.path, req.file!.size, `${result.id}`)
-            console.log("img upload result")
             res.sendStatus(200);
         }
-        else if(result && result.id) res.sendStatus(200)
+        else if(result && result.id) res.sendStatus(200) //Img doesn't exist
         else throw new BaseError(403, "Post creation failed.")
     }
     catch (err) {
@@ -73,6 +72,7 @@ const postPosts = async function (req: Request, res: Response, next: any) {
 
 const vote = async (req: Request, res: Response, next: any) => {
     try {
+        //Number() can return 0 which counts as false, isInteger(0) returns true, ids can't be 0s
         if (!(Number(req.params.post_id) && Number(req.query.user_id) && Number.isInteger(Number(req.query.vote)))) {
             throw new BaseError(400, "Failed to vote post, invalid/missing url parameters")
         }
@@ -92,7 +92,6 @@ const vote = async (req: Request, res: Response, next: any) => {
 
 const getVotes = async (req: Request, res: Response, next: any) => {
     try {
-        console.log("Getting votes: " + req.params.id + " " + req.query.user_id)
         if (!(Number(req.params.id) && Number(req.query.user_id))) {
             throw new BaseError(400, "Failed to get votes, invalid/missing url parameters")
         }
@@ -108,6 +107,7 @@ PostsRouter.get("/subreddits/:id/posts/votes", getVotes)
 PostsRouter.post("/subreddits/:id/posts/:post_id/vote", vote)
 PostsRouter.get("/subreddits/:id/posts", getPosts);
 //.bind() binds 'this' inside verifyAT to tokenFuncs object
+//upload.single() from multer handles imgs attached to requests
 PostsRouter.post("/subreddits/:id/posts", tokenFuncs.verifyAccessToken.bind(tokenFuncs), upload.single('Img'), postPosts)
 
 export default PostsRouter; 
