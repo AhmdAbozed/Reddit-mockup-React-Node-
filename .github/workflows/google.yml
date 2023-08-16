@@ -19,11 +19,10 @@ jobs:
         workload_identity_provider: 'projects/664492497615/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
         service_account: 'appspot@annular-accord-394214.iam.gserviceaccount.com'
 
-    - name: 'Set up Cloud SDK'
-      uses: 'google-github-actions/setup-gcloud@v1'
-      with:
-        version: '>= 363.0.0'
+    - id: 'deploy'
+      uses: 'google-github-actions/deploy-appengine@v1'
 
-    - name: 'Use gcloud CLI to deploy to app engine'
-      run: |
-        gcloud app deploy
+    # Example of using the output
+    - id: 'test'
+      run: 'curl "${{ steps.deploy.outputs.url }}"'
+      
