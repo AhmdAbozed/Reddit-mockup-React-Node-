@@ -23,19 +23,13 @@ jobs:
       uses: 'google-github-actions/setup-gcloud@v1'
       with:
         version: '>= 363.0.0'
+    - uses: actions/checkout@v3
+      with:
+        clean: false
     - name: 'Use gcloud CLI to deploy to app engine'
       run: |
         ls
         cd ../
-        ls
-        cd ../
-        ls
-        cd ../
-        ls
-        cd ../
-        ls
-        cd ../
-        ls
-        cd ../
+        echo 'hm'
         ls
         gcloud app deploy
