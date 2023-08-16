@@ -26,5 +26,7 @@ jobs:
     
     - name: 'Use gcloud CLI to deploy to app engine'
       run: |
-        cd ${{ github.workspace }}/backend_node
+        ls
+        cd ../
+        ls
         gcloud app deploy
