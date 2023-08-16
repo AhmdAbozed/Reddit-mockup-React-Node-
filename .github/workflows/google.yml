@@ -25,5 +25,5 @@ jobs:
         version: '>= 363.0.0'
 
     - name: 'Use gcloud CLI to deploy to app engine'
-      working-directory: ./backend_node
+      working-directory: backend_node
       run: 'gcloud app deploy'
