@@ -21,7 +21,8 @@ jobs:
 
     - id: 'deploy'
       uses: 'google-github-actions/deploy-appengine@v1'
-
+      with:
+        working_directory: ./backend_node 
     # Example of using the output
     - id: 'test'
       run: 'curl "${{ steps.deploy.outputs.url }}"'
