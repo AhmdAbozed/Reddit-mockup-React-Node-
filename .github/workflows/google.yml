@@ -22,7 +22,7 @@ jobs:
       uses: 'google-github-actions/auth@v1'
       with:
         workload_identity_provider: 'projects/664492497615/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-        service_account: 'annular-accord-394214@appspot.gserviceaccount.com'
+        service_account: 'appengine@annular-accord-394214.iam.gserviceaccount.com'
         cleanup_credentials: false
 
     - id: 'deploy'
