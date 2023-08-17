@@ -22,74 +22,9 @@ jobs:
       uses: 'google-github-actions/auth@v1'
       with:
         workload_identity_provider: 'projects/664492497615/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-        service_account: 'appspot@annular-accord-394214.iam.gserviceaccount.com'
+        service_account: 'annular-accord-394214@appspot.gserviceaccount.com'
         cleanup_credentials: false
 
-    - run: |-
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
-        pwd
-        ls
-        cd ../
-        echo 'next path'
     - id: 'deploy'
       uses: 'google-github-actions/deploy-appengine@v1'
       with:
