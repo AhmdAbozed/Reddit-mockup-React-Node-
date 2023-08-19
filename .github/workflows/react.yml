@@ -6,8 +6,7 @@ on:
     paths:
     - "frontend_react/**"
     - ".github/workflows/react.yml"
-    paths-ignore:
-    - "frontend_react/build"
+    - "!frontend_react/build/**"
 
 jobs:
   build:
