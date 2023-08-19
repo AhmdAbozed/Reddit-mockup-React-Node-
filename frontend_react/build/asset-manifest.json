@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.82d5fd6e.css",
+    "main.js": "/static/js/main.ecd53976.js",
+    "static/js/787.df7176c1.chunk.js": "/static/js/787.df7176c1.chunk.js",
+    "static/media/down_filled.svg": "/static/media/down_filled.3c2d80cfed5b2e7df2ae.svg",
+    "static/media/subreddit.svg": "/static/media/subreddit.0d0ae95928c458fdc6f8.svg",
+    "static/media/down.svg": "/static/media/down.fcffb7312d11af750db7.svg",
+    "static/media/up_filled.svg": "/static/media/up_filled.2b48e8d6760b288c47a1.svg",
+    "static/media/reddit-logo.svg": "/static/media/reddit-logo.b13c39bbeb2a24de0b05.svg",
+    "static/media/up2.svg": "/static/media/up2.cf79ef1e62ebdf898a78.svg",
+    "static/media/reddit-avatar.svg": "/static/media/reddit-avatar.99e4966768877073d770.svg",
+    "static/media/menu-burger.svg": "/static/media/menu-burger.16b2fac24e9e7d53673f.svg",
+    "static/media/user.svg": "/static/media/user.2cf1644eb20f49724235.svg",
+    "static/media/filler.svg": "/static/media/filler.15d507403c1fda6f4593.svg",
+    "static/media/cancel.svg": "/static/media/cancel.a60a1f212f481b592259.svg",
+    "index.html": "/index.html",
+    "static/media/mail.svg": "/static/media/mail.0e2f03c6fba61bbd0e7b.svg",
+    "static/media/plus.svg": "/static/media/plus.d360d4773e47ed013df8.svg",
+    "main.82d5fd6e.css.map": "/static/css/main.82d5fd6e.css.map",
+    "main.ecd53976.js.map": "/static/js/main.ecd53976.js.map",
+    "787.df7176c1.chunk.js.map": "/static/js/787.df7176c1.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.82d5fd6e.css",
+    "static/js/main.ecd53976.js"
+  ]
+}
