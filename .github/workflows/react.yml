@@ -5,6 +5,7 @@ on:
     branches: [ "action-test-branch" ]
     paths:
     - "frontend_react/**"
+    - ".github/workflows/react.yml"
 
 jobs:
   build:
@@ -17,8 +18,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
@@ -26,3 +26,8 @@ jobs:
           npm ci
           CI=false && npm run build --if-present
           ls
+          git config --global user.name 'AhmdAbozed'
+          git config --global user.email 'ahmdabozed88@gmail.com'
+          git add .
+          git commit -am "Automated commit"
+          git push
