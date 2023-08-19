@@ -3,7 +3,8 @@ name: React Build
 on:
   push:
     branches: [ "action-test-branch" ]
-  
+    paths:
+    - "frontend_react/**"
 
 jobs:
   build:
