@@ -5,7 +5,7 @@ import "./css/App.css"
 import { Outlet } from "react-router-dom";
 import LogInForm from "./components/LogInForm";
 import { createContext } from 'react';
-
+//comment
 //without any I get Dispatch<Setstate...> at toggle. Use an interface with boolean and dispatch also works
 export const loginContext = createContext<any>({
   loginFormState: false,
