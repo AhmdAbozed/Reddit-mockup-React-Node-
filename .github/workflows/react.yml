@@ -6,6 +6,8 @@ on:
     paths:
     - "frontend_react/**"
     - ".github/workflows/react.yml"
+    paths-ignore:
+    - "frontend_react/build"
 
 jobs:
   build:
@@ -30,4 +32,4 @@ jobs:
           git config --global user.email 'ahmdabozed88@gmail.com'
           git add .
           git commit -am "Automated commit"
-          git push
+          git push origin action-test-branch
